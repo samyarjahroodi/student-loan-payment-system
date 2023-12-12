@@ -2,14 +2,15 @@ package entity.student;
 
 import entity.Person;
 import entity.card.Card;
-import entity.university.University;
+import entity.loan.Loan;
+import entity.university.TypeOfUniversity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -19,19 +20,36 @@ import java.util.Set;
 @AllArgsConstructor
 @SuppressWarnings("unused")
 public class Student extends Person {
-    @ManyToOne
-    private University university;
-
-    @Column(nullable = false, unique = true, name = "student_code")
+    @Column(unique = true, name = "student_code")
     private String studentCode;
 
     @Column(nullable = false, name = "entrance_year")
-    private Date entranceYear;
+    private Integer entranceYear;
 
     @Column(nullable = false)
     private Grade grade;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private Set<Card> cards;
+
+    private String password;
+
+    private boolean isMarried;
+
+    private boolean accomodateInUniversity;
+
+    @Column(name = "name")
+    private String nameOfUniversity;
+
+    private TypeOfUniversity typeOfUniversity;
+
+
+    private String address;
+
+    private String city;
+
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Loan> loans;
+
 
 }

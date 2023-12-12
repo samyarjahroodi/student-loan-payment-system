@@ -5,4 +5,5 @@ import entity.student.Student;
 
 public interface StudentService
         extends BaseEntityService<Student,Integer> {
+
 }

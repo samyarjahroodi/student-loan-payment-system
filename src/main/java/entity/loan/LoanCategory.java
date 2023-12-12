@@ -6,9 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,6 +24,6 @@ public class LoanCategory extends BaseEntity<Integer> {
     @Column(name = "payment_type")
     private PaymentType paymentType;
 
-    @OneToOne
-    private Loan loan;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Loan> loan;
 }

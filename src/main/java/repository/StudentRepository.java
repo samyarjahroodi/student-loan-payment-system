@@ -5,4 +5,6 @@ import entity.student.Student;
 
 public interface StudentRepository
         extends BaseEntityRepository<Student, Integer> {
+
+
 }

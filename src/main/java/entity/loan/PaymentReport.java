@@ -20,8 +20,11 @@ import java.util.Date;
 public class PaymentReport extends BaseEntity<Integer> {
     @ManyToOne
     private Loan loan;
+
     @Column(name = "loan_number")
     private int loanNumber;
+
+    private Long amountPerPayment;
 
     @Column(name = "due_date")
     private Date dueDate;
@@ -31,4 +34,5 @@ public class PaymentReport extends BaseEntity<Integer> {
 
     @Column(name = "is_paid", columnDefinition = "boolean default false")
     private boolean isPaid;
+
 }

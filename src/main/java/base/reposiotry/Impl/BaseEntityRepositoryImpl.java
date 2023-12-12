@@ -22,7 +22,7 @@ public abstract class BaseEntityRepositoryImpl
     public void saveOrUpdate(T entity) {
         try {
             beginTransaction();
-            saveOrUpdate(entity);
+            entityManager.merge(entity);
             commitTransaction();
         } catch (Exception e) {
             e.printStackTrace();
@@ -34,7 +34,10 @@ public abstract class BaseEntityRepositoryImpl
     public void delete(ID id) {
         try {
             beginTransaction();
-            delete(id);
+            T t = entityManager.find(getEntityClass(), id);
+            if (t != null) {
+                entityManager.remove(t);
+            }
             commitTransaction();
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,7 +76,7 @@ public abstract class BaseEntityRepositoryImpl
 
     @Override
     public void commitTransaction() {
-        if (!entityManager.getTransaction().isActive()) {
+        if (entityManager.getTransaction().isActive()) {
             entityManager.getTransaction().commit();
         }
     }

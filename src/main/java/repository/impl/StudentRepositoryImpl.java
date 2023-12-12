@@ -19,4 +19,5 @@ public class StudentRepositoryImpl
         return Student.class;
     }
 
+
 }

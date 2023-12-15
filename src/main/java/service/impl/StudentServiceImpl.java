@@ -14,4 +14,8 @@ public class StudentServiceImpl
         super(repository);
     }
 
+    @Override
+    public boolean logIn(String nationalCode, String password) {
+        return repository.logIn(nationalCode, password);
+    }
 }

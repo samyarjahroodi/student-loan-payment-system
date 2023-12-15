@@ -4,6 +4,7 @@ import base.service.BaseEntityService;
 import entity.student.Student;
 
 public interface StudentService
-        extends BaseEntityService<Student,Integer> {
+        extends BaseEntityService<Student, Integer> {
+    boolean logIn(String nationalCode, String password);
 
 }

@@ -2,11 +2,7 @@ package entity.loan;
 
 import base.entity.BaseEntity;
 import entity.student.Student;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,8 +14,10 @@ import java.util.List;
 @Setter
 @SuppressWarnings("unused")
 @Entity
+@Builder
 public class Loan extends BaseEntity<Integer> {
     @ManyToOne
+    @JoinColumn(name = "loan_category")
     private LoanCategory loanCategory;
 
     @ManyToOne
@@ -29,5 +27,4 @@ public class Loan extends BaseEntity<Integer> {
     @Column(name = "payment_report")
     private List<PaymentReport> paymentReport;
 
-    private String housingRentalAgreementNumber;
 }

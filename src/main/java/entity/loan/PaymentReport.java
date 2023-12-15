@@ -1,10 +1,7 @@
 package entity.loan;
 
 import base.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +14,7 @@ import java.util.Date;
 @Setter
 @SuppressWarnings("unused")
 @Entity
+@Builder
 public class PaymentReport extends BaseEntity<Integer> {
     @ManyToOne
     private Loan loan;

@@ -2,14 +2,9 @@ package entity.card;
 
 import base.entity.BaseEntity;
 import entity.student.Student;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -17,6 +12,7 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
+@Builder
 @SuppressWarnings("unused")
 public class Card extends BaseEntity<Integer> {
     @Column(name = "card_number")
@@ -25,8 +21,10 @@ public class Card extends BaseEntity<Integer> {
     private int cvv2;
 
     @Column(name = "expire_date")
+    @Temporal(TemporalType.DATE)
     private Date expireDateOfCart;
 
+    @Enumerated(EnumType.STRING)
     private Bank bank;
 
     @ManyToOne

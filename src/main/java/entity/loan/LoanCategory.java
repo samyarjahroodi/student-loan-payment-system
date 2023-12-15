@@ -1,10 +1,7 @@
 package entity.loan;
 
 import base.entity.BaseEntity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@Builder
 @SuppressWarnings("unused")
 public class LoanCategory extends BaseEntity<Integer> {
     @Column(name = "type_of_loan")
@@ -22,8 +20,14 @@ public class LoanCategory extends BaseEntity<Integer> {
     private Long amount;
 
     @Column(name = "payment_type")
+    @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Loan> loan;
+
+    private String city;
+    @Column(name = "housing_rental_agreement_number")
+    private String housingRentalAgreementNumber;
+
 }

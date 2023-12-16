@@ -22,6 +22,19 @@ public class StudentRepositoryImpl
 
 
     @Override
+    public void setStudentSpouse(Integer studentId, Integer studentSpouseId) {
+        try {
+            beginTransaction();
+            //entityManager.createQuery()
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            rollBack();
+        }
+
+    }
+
+    @Override
     public boolean logIn(String nationalCode, String password) {
         TypedQuery<Long> query = entityManager.createQuery("SELECT COUNT(s) FROM Student s " +
                 "WHERE s.nationalCode = :nationalCode AND s.password = :password", Long.class);

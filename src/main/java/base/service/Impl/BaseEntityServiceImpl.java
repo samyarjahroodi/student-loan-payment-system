@@ -21,8 +21,9 @@ public class BaseEntityServiceImpl
 
 
     @Override
-    public void saveOrUpdate(T entity) {
+    public T saveOrUpdate(T entity) {
         repository.saveOrUpdate(entity);
+        return entity;
     }
 
     @Override

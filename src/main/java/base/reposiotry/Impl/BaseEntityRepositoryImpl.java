@@ -19,11 +19,16 @@ public abstract class BaseEntityRepositoryImpl
 
 
     @Override
-    public void saveOrUpdate(T entity) {
-        beginTransaction();
-        saveWithoutTransaction(entity);
-        commitTransaction();
-        entityManager.clear();
+    public T saveOrUpdate(T entity) {
+        try {
+            beginTransaction();
+            saveWithoutTransaction(entity);
+            commitTransaction();
+        } catch (Exception e) {
+            e.printStackTrace();
+            rollBack();
+        }
+        return entity;
     }
 
     private T saveWithoutTransaction(T entity) {

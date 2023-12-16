@@ -1,7 +1,7 @@
 package menu;
 
 import entity.card.Card;
-import entity.student.Grade;
+
 import entity.student.Student;
 import entity.student.StudentSpouse;
 import entity.university.TypeOfGovernmentalUniversity;
@@ -17,13 +17,15 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static menu.ShowEnums.*;
+
 @SuppressWarnings("unused")
 public class SignUpMenu {
     private static final Scanner scanner = new Scanner(System.in);
     private static final StudentServiceImpl service = ApplicationContext.getSTUDENT_SERVICE();
     private static final StudentSpouseServiceImpl studentSpouseService = ApplicationContext.getSTUDENT_SPOUSE_SERVICE();
     private static final CardServiceImpl cardService = ApplicationContext.getCARD_SERVICE();
-    static StudentSpouse studentSpouse;
+    static StudentSpouse studentSpouse = new StudentSpouse();
     static Student student = new Student();
     static Card card = new Card();
 
@@ -31,7 +33,6 @@ public class SignUpMenu {
     public static void signUpMenuForStudent() throws ParseException {
         System.out.println("---WELCOME TO SIGNUP MENU FOR STUDENT---");
         fillStudent();
-//        service.saveOrUpdate(student);
     }
 
 
@@ -40,25 +41,8 @@ public class SignUpMenu {
         return scanner.next();
     }
 
-    private static List<Grade> showGrade() {
-        List<Grade> grades = new ArrayList<>();
-        for (Grade grade : Grade.values()) {
-            grades.add(grade);
-        }
-        return grades;
-    }
 
-    private static List<TypeOfUniversity> showTypeOfUniversities() {
-        List<TypeOfUniversity> typeOfUniversities = new ArrayList<>();
-        for (TypeOfUniversity t : TypeOfUniversity.values()) {
-            typeOfUniversities.add(t);
-        }
-        return typeOfUniversities;
-    }
-
-    //to do avoid duplicate methods
     private static void fillStudent() throws ParseException {
-
         student.setFirstname(getInput("Enter Firstname: "));
         student.setLastname(getInput("Enter Lastname: "));
         student.setFatherName(getInput("Enter Father's Name: "));
@@ -92,9 +76,6 @@ public class SignUpMenu {
 
         student.setEntranceYear(Integer.parseInt(getInput("Enter Entrance Year: ")));
 
-        System.out.println(showGrade());
-        student.setGrade(Grade.valueOf(getInput("Enter Grade: ").toUpperCase(Locale.ROOT)));
-
 
         String password;
         do {
@@ -102,29 +83,81 @@ public class SignUpMenu {
         } while (!Validation.isValidPassword(password));
         student.setPassword(password);
 
+        System.out.println(getIdOfStudent(student));
+
+        showGrade();
+
         giveSpouse();
+
 
         student.setNameOfUniversity(getInput("Name of the university : "));
 
-        student.setAccommodateInUniversity(Boolean.parseBoolean(getInput("Accommodate In University : ")));
+        accommodateInUniversity();
 
-        System.out.println(showTypeOfUniversities());
-        TypeOfUniversity typeOfUniversity = TypeOfUniversity.valueOf(getInput("Type of university : "));
-        student.setTypeOfUniversity(typeOfUniversity);
+        TypeOfUniversity typeOfUniversity = showTypeOfUniversities();
 
         if (typeOfUniversity.equals(TypeOfUniversity.GOVERNMENTAL)) {
             addTypeOfGovernmentalUniversity();
         } else {
-            TypeOfGovernmentalUniversity.values().equals(null);
+            student.setTypeOfGovernmentalUniversity(TypeOfGovernmentalUniversity.NULL);
         }
 
         student.setCity(getInput("City : "));
 
+        cardMenu();
+
         service.saveOrUpdate(student);
+        System.out.println("SUCCESSFUL!!!");
+
+    }
+
+    private static void accommodateInUniversity() {
+        String string = """
+                Accommodate in university :
+                1-true;
+                2-false
+                """;
+        System.out.println(string);
+        int input = scanner.nextInt();
+        switch (input) {
+            case 1 -> student.setAccommodateInUniversity(true);
+            case 2 -> student.setAccommodateInUniversity(false);
+            default -> System.out.println("Invalid input");
+        }
     }
 
 
-    private static void addTypeOfGovernmentalUniversity() {
+    private static void cardMenu() throws ParseException {
+        String cardNumber;
+        do {
+            cardNumber = getInput("Card Number : ");
+        } while (!Validation.cardValidation(cardNumber));
+        card.setCardNumber(cardNumber);
+
+        String expireDate;
+        do {
+            expireDate = getInput("Enter your expire date (yyyy-MM-dd): ");
+        } while (!Validation.isValidDate(expireDate));
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        card.setExpireDateOfCart(formatter.parse(expireDate));
+
+
+        String cvv2;
+        do {
+            cvv2 = getInput("Enter your expire cvv2: ");
+        } while (!Validation.cvv2Validation(cvv2));
+        card.setCvv2(Integer.parseInt(cvv2));
+
+        showBanksAndSelect();
+
+        cardService.saveOrUpdate(card);
+
+        card.setStudent(student);
+
+    }
+
+
+    public static void addTypeOfGovernmentalUniversity() {
         System.out.println("Which type you are : ");
         String string = """
                 1-Daily
@@ -140,34 +173,9 @@ public class SignUpMenu {
     }
 
 
-    private static List<TypeOfGovernmentalUniversity> showTypes() {
-        List<TypeOfGovernmentalUniversity> typeOfGovernmentalUniversities = new ArrayList<>();
-        for (TypeOfGovernmentalUniversity t : TypeOfGovernmentalUniversity.values()) {
-            typeOfGovernmentalUniversities.add(t);
-        }
-        return typeOfGovernmentalUniversities;
-    }
-
-
-    private static void isSpouseStudent() {
-        String string = """
-                Is your spouse student:
-                1-true
-                2-false
-                """;
-        System.out.println(string);
-        int input = scanner.nextInt();
-        switch (input) {
-            case 1 -> studentSpouse.setStudent(true);
-            case 2 -> studentSpouse.setStudent(false);
-            default -> System.out.println("invalid input");
-        }
-    }
-
-
-    private static StudentSpouse giveSpouse() throws ParseException {
+    private static void giveSpouse() throws ParseException {
         String isMarried = """
-                is Married :
+                is Married? :
                 1-true
                 2-false
                 """;
@@ -175,7 +183,6 @@ public class SignUpMenu {
         int input = scanner.nextInt();
         switch (input) {
             case 1 -> {
-                studentSpouse = new StudentSpouse();
                 student.setMarried(true);
                 System.out.println("Spouse information : ");
                 studentSpouse.setFirstname(getInput("Enter spouse firstname: "));
@@ -206,8 +213,39 @@ public class SignUpMenu {
                 studentSpouse.setDateOfBirth(formatter.parse(date));
                 isSpouseStudent();
                 studentSpouseService.saveOrUpdate(studentSpouse);
+                studentSpouse.setStudent(student);
             }
             case 2 -> student.setMarried(false);
         }
+
+//        Integer id = student.getStudentSpouse().getId();
+//        System.out.println(id);
+//        System.out.println(id);
+//        System.out.println(id);
+//        System.out.println(id);
+//        service.saveOrUpdate(student);
     }
+
+
+    private static Integer getIdOfStudent(Student student) {
+        return student.getId();
+    }
+
+
+    private static void isSpouseStudent() {
+        String string = """
+                Is your spouse student:
+                1-true
+                2-false
+                """;
+        System.out.println(string);
+        int input = scanner.nextInt();
+        switch (input) {
+            case 1 -> studentSpouse.setSheOrHeStudent(true);
+            case 2 -> studentSpouse.setSheOrHeStudent(false);
+            default -> System.out.println("invalid input");
+        }
+    }
+
+
 }

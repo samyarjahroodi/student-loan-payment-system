@@ -17,14 +17,16 @@ import java.util.Date;
 @SuppressWarnings("unused")
 public class StudentSpouse extends Person {
     @Column(name = "is_student", columnDefinition = "boolean default false")
-    private boolean isStudent;
+    private boolean isSheOrHeStudent;
 
     @OneToOne
     private Student student;
 
-    public StudentSpouse(String firstname, String lastname, String fatherName, String motherName, String idOfBirthCertificate, String nationalCode, Date dateOfBirth, boolean isStudent, Student student) {
+    public StudentSpouse(String firstname, String lastname, String fatherName, String motherName,
+                         String idOfBirthCertificate, String nationalCode, Date dateOfBirth,
+                         boolean isSheOrHeStudent, Student student) {
         super(firstname, lastname, fatherName, motherName, idOfBirthCertificate, nationalCode, dateOfBirth);
-        this.isStudent = isStudent;
+        this.isSheOrHeStudent = isSheOrHeStudent;
         this.student = student;
     }
 }

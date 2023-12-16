@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 public interface BaseEntityService<T extends BaseEntity<ID>, ID extends Serializable> {
-    void saveOrUpdate(T entity);
+    T saveOrUpdate(T entity);
 
     void delete(ID id);
 

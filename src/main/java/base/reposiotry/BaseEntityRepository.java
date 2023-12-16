@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface BaseEntityRepository
         <T , ID extends Serializable> {
 
-    void saveOrUpdate(T entity);
+    T saveOrUpdate(T entity);
 
     void delete(ID id);
 

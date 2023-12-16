@@ -46,16 +46,21 @@ public class Student extends Person {
 
     private String city;
 
-    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private Set<Card> cards;
+//    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+//    private Set<Card> cards;
+
+    @OneToOne
+    private StudentSpouse studentSpouse;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Loan> loans;
 
-    public Student(String firstname, String lastname, String fatherName, String motherName, String idOfBirthCertificate,
-                   String nationalCode, Date dateOfBirth, String studentCode, Integer entranceYear, Grade grade,
-                   String password, boolean isMarried, boolean accommodateInUniversity, String nameOfUniversity,
-                   TypeOfUniversity typeOfUniversity, TypeOfGovernmentalUniversity typeOfGovernmentalUniversity, String city) {
+    public Student(String firstname, String lastname, String fatherName, String motherName,
+                   String idOfBirthCertificate, String nationalCode, Date dateOfBirth,
+                   String studentCode, Integer entranceYear, Grade grade, String password,
+                   boolean isMarried, boolean accommodateInUniversity, String nameOfUniversity,
+                   TypeOfUniversity typeOfUniversity, TypeOfGovernmentalUniversity typeOfGovernmentalUniversity, String city,
+                   StudentSpouse studentSpouse) {
         super(firstname, lastname, fatherName, motherName, idOfBirthCertificate, nationalCode, dateOfBirth);
         this.studentCode = studentCode;
         this.entranceYear = entranceYear;
@@ -67,7 +72,6 @@ public class Student extends Person {
         this.typeOfUniversity = typeOfUniversity;
         this.typeOfGovernmentalUniversity = typeOfGovernmentalUniversity;
         this.city = city;
+        this.studentSpouse = studentSpouse;
     }
-
-
 }

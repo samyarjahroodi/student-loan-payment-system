@@ -7,4 +7,8 @@ public interface StudentRepository
         extends BaseEntityRepository<Student, Integer> {
 
     boolean logIn(String nationalCode, String password);
+
+    void setStudentSpouse(Integer studentId, Integer studentSpouseId);
+
+
 }

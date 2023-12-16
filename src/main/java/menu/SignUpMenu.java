@@ -56,9 +56,11 @@ public class SignUpMenu {
 
         String nationalCode;
         do {
-            nationalCode = getInput("Enter National Code: ");
+            nationalCode = getInput("Enter National Code (username): ");
         } while (!Validation.isValidNationalCode(nationalCode));
         student.setNationalCode(nationalCode);
+
+        student.setUsername(student.getNationalCode());
 
         String date;
         do {

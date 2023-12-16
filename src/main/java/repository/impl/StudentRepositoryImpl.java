@@ -5,6 +5,8 @@ import entity.student.Student;
 import repository.StudentRepository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 public class StudentRepositoryImpl
@@ -22,24 +24,23 @@ public class StudentRepositoryImpl
 
 
     @Override
-    public void setStudentSpouse(Integer studentId, Integer studentSpouseId) {
-        try {
-            beginTransaction();
-            //entityManager.createQuery()
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            rollBack();
-        }
-
+    public boolean logIn(String username, String password) {
+        TypedQuery<Long> query = entityManager.createQuery("SELECT COUNT(s) FROM Student s " +
+                "WHERE s.username = :username AND s.password = :password", Long.class);
+        query.setParameter("username", username);
+        query.setParameter("password", password);
+        return query.getSingleResult() > 0;
     }
 
     @Override
-    public boolean logIn(String nationalCode, String password) {
-        TypedQuery<Long> query = entityManager.createQuery("SELECT COUNT(s) FROM Student s " +
-                "WHERE s.nationalCode = :nationalCode AND s.password = :password", Long.class);
-        query.setParameter("nationalCode", nationalCode);
-        query.setParameter("password", password);
-        return query.getSingleResult() > 0;
+    public Student findStudentByNationalCode(String nationalCode) {
+        try {
+            return (Student) entityManager.createQuery("SELECT s from Student s where s.nationalCode = :nationalCode ")
+                    .setParameter("nationalCode", nationalCode).getSingleResult();
+
+        } catch (NoResultException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

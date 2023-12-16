@@ -7,4 +7,5 @@ public interface StudentService
         extends BaseEntityService<Student, Integer> {
     boolean logIn(String nationalCode, String password);
 
+    Student findStudentByNationalCode(String nationalCode);
 }

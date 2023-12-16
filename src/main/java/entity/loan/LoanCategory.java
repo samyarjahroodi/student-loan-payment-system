@@ -23,11 +23,12 @@ public class LoanCategory extends BaseEntity<Integer> {
     @Enumerated(EnumType.STRING)
     private PaymentType paymentType;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanCategory")
     private List<Loan> loan;
 
     private String city;
     @Column(name = "housing_rental_agreement_number")
     private String housingRentalAgreementNumber;
+
 
 }

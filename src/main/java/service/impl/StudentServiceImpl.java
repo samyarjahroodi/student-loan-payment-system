@@ -15,7 +15,12 @@ public class StudentServiceImpl
     }
 
     @Override
-    public boolean logIn(String nationalCode, String password) {
-        return repository.logIn(nationalCode, password);
+    public boolean logIn(String username, String password) {
+        return repository.logIn(username, password);
+    }
+
+    @Override
+    public Student findStudentByNationalCode(String nationalCode) {
+        return repository.findStudentByNationalCode(nationalCode);
     }
 }

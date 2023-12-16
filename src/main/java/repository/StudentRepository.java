@@ -8,7 +8,7 @@ public interface StudentRepository
 
     boolean logIn(String nationalCode, String password);
 
-    void setStudentSpouse(Integer studentId, Integer studentSpouseId);
+    Student findStudentByNationalCode(String nationalCode);
 
 
 }

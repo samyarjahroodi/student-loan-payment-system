@@ -6,7 +6,6 @@ import repository.StudentRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 public class StudentRepositoryImpl

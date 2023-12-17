@@ -21,7 +21,7 @@ public class ShowEnums {
                      5-DISCONTINUOUS_MASTER,
                      6-DOCTORATE,
                      7-CONTINUOUS_DOCTORATE,
-                     8-DISCONTINUOUS_SPECIALIZED_DOCTORATE 
+                     8-DISCONTINUOUS_SPECIALIZED_DOCTORATE\040
                 """;
         System.out.println(string);
         int input = scanner.nextInt();
@@ -71,13 +71,13 @@ public class ShowEnums {
         int input = scanner.nextInt();
         TypeOfUniversity typeOfUniversity = null;
         switch (input) {
-            case 1 -> typeOfUniversity = typeOfUniversity.GOVERNMENTAL;
-            case 2 -> typeOfUniversity = typeOfUniversity.GHEYRENTEFAYI;
-            case 3 -> typeOfUniversity = typeOfUniversity.PARDIS;
-            case 4 -> typeOfUniversity = typeOfUniversity.ZARFIATMAZAD;
-            case 5 -> typeOfUniversity = typeOfUniversity.PAYAMNOOR;
-            case 6 -> typeOfUniversity = typeOfUniversity.ELMIKARBORDI;
-            case 7 -> typeOfUniversity = typeOfUniversity.AZAD;
+            case 1 -> typeOfUniversity = TypeOfUniversity.GOVERNMENTAL;
+            case 2 -> typeOfUniversity = TypeOfUniversity.GHEYRENTEFAYI;
+            case 3 -> typeOfUniversity = TypeOfUniversity.PARDIS;
+            case 4 -> typeOfUniversity = TypeOfUniversity.ZARFIATMAZAD;
+            case 5 -> typeOfUniversity = TypeOfUniversity.PAYAMNOOR;
+            case 6 -> typeOfUniversity = TypeOfUniversity.ELMIKARBORDI;
+            case 7 -> typeOfUniversity = TypeOfUniversity.AZAD;
             default -> System.out.println("Invalid input");
         }
         student.setTypeOfUniversity(typeOfUniversity);

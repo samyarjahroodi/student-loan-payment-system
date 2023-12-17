@@ -1,6 +1,7 @@
 package entity.student;
 
 import entity.Person;
+import entity.card.Card;
 import entity.loan.Loan;
 import entity.university.TypeOfGovernmentalUniversity;
 import entity.university.TypeOfUniversity;
@@ -33,10 +34,6 @@ public class Student extends Person {
     @Column(nullable = false)
     private Grade grade;
 
-    private String password;
-
-    private String username;
-
     @Column(name = "is_married")
     private boolean isMarried;
 
@@ -51,9 +48,11 @@ public class Student extends Person {
 
     private String city;
 
-
     @OneToOne
     private StudentSpouse studentSpouse;
+
+    @OneToMany(mappedBy = "student")
+    private List<Card> card;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Loan> loans = new ArrayList<>();

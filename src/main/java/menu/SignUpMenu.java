@@ -80,7 +80,7 @@ public class SignUpMenu {
 
 
         String password = Validation.generateRandomPassword();
-        System.out.println("Your password is: " + password);
+        System.out.println("Your random password is: " + password);
         student.setPassword(password);
 
         showGrade();
@@ -196,10 +196,14 @@ public class SignUpMenu {
 
                 String nationalCode;
                 do {
-                    nationalCode = getInput("Enter National Code: ");
+                    nationalCode = getInput("Enter National Code (username): ");
                 } while (!Validation.isValidNationalCode(nationalCode));
                 studentSpouse.setNationalCode(nationalCode);
+                studentSpouse.setUsername(studentSpouse.getNationalCode());
 
+                String password = Validation.generateRandomPassword();
+                System.out.println("Your random password is : " + password);
+                studentSpouse.setPassword(password);
 
                 String date;
                 do {
@@ -226,9 +230,4 @@ public class SignUpMenu {
             case 2 -> student.setMarried(false);
         }
     }
-
-    private static Integer getIdOfStudent(Student student) {
-        return student.getId();
-    }
-
 }

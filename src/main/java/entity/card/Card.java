@@ -32,4 +32,15 @@ public class Card extends BaseEntity<Integer> {
     private Student student;
 
     private BigDecimal amountOfAccount;
+
+    @Override
+    public String toString() {
+        return "Card{" +
+                "cardNumber='" + cardNumber + '\'' +
+                ", cvv2=" + cvv2 +
+                ", expireDateOfCart=" + expireDateOfCart +
+                ", bank=" + bank +
+                ", amountOfAccount=" + amountOfAccount +
+                '}';
+    }
 }

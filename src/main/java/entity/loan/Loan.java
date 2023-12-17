@@ -32,5 +32,6 @@ public class Loan extends BaseEntity<Integer> {
     @ManyToOne(cascade = CascadeType.ALL)
     private StudentSpouse studentSpouse;
 
+    @Column(name = "date_that_loan_has_been_paid")
     private LocalDate dateThatLoanHasBeenGet;
 }

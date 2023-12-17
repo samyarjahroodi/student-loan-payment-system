@@ -8,4 +8,5 @@ public interface StudentService
     boolean logIn(String nationalCode, String password);
 
     Student findStudentByNationalCode(String nationalCode);
+
 }

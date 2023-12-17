@@ -31,4 +31,8 @@ public class Person extends BaseEntity<Integer> {
     private String nationalCode;
     @Column(nullable = false, unique = true, name = "date_of_birth")
     private Date dateOfBirth;
+    @Column(nullable = false)
+    private String password;
+    @Column(nullable = false, unique = true)
+    private String username;
 }

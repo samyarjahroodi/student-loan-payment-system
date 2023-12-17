@@ -1,21 +1,25 @@
 package menu;
 
 
+import entity.card.Card;
 import entity.loan.*;
 import entity.student.Grade;
 import entity.student.Student;
 import entity.university.TypeOfGovernmentalUniversity;
 import entity.university.TypeOfUniversity;
+import service.impl.CardServiceImpl;
 import service.impl.LoanCategoryServiceImpl;
 import service.impl.LoanServiceImpl;
 import utility.ApplicationContext;
 import utility.SecurityContext;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,6 +29,7 @@ public class LoanMenu {
     private static final Scanner scanner = new Scanner(System.in);
     private static final LoanServiceImpl loanService = ApplicationContext.getLOAN_SERVICE();
     private static final LoanCategoryServiceImpl loanCategoryService = ApplicationContext.getLOAN_CATEGORY_SERVICE();
+    private static final CardServiceImpl cardService = ApplicationContext.getCARD_SERVICE();
 
 
     public static void primaryMenuForLoanMenu() throws ParseException {
@@ -85,25 +90,37 @@ public class LoanMenu {
         Grade grade = student.getGrade();
         if (grade.equals(Grade.ASSOCIATE) || grade.equals(Grade.CONTINUOUS_BACHELOR) ||
                 grade.equals(Grade.DISCONTINUOUS_BACHELOR)) {
-            loanCategory.setAmount(1900000L);
+            long l = 1900000L;
+            loanCategory.setAmount(l);
             loanCategoryService.saveOrUpdate(loanCategory);
             loan.setLoanCategory(loanCategory);
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
+            Card card = setBankForPayment();
+            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.CONTINUOUS_MASTER)
                 || grade.equals(Grade.DISCONTINUOUS_MASTER)
                 || grade.equals(Grade.DOCTORATE) || grade.equals(Grade.CONTINUOUS_DOCTORATE)) {
-            loanCategory.setAmount(2250000L);
+            long l = 2250000L;
+            loanCategory.setAmount(l);
             loanCategoryService.saveOrUpdate(loanCategory);
             loan.setLoanCategory(loanCategory);
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
+            Card card = setBankForPayment();
+            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.DISCONTINUOUS_SPECIALIZED_DOCTORATE)) {
+            long l = 2600000L;
             loanCategory.setAmount(2600000L);
             loanCategoryService.saveOrUpdate(loanCategory);
             loan.setLoanCategory(loanCategory);
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
+            Card card = setBankForPayment();
+            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            cardService.saveOrUpdate(card);
         }
         LogInMenu.menuAfterLogIn();
     }
@@ -125,36 +142,68 @@ public class LoanMenu {
 
         if (grade.equals(Grade.ASSOCIATE) || grade.equals(Grade.CONTINUOUS_BACHELOR) ||
                 grade.equals(Grade.DISCONTINUOUS_BACHELOR)) {
-            loanCategory.setAmount(1300000L);
+            long l = 1300000L;
+            loanCategory.setAmount(l);
             loanCategoryService.saveOrUpdate(loanCategory);
             loan.setLoanCategory(loanCategory);
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
+            Card card = setBankForPayment();
+            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.CONTINUOUS_MASTER)
                 || grade.equals(Grade.DISCONTINUOUS_MASTER)
                 || grade.equals(Grade.DOCTORATE) || grade.equals(Grade.CONTINUOUS_DOCTORATE)) {
-            loanCategory.setAmount(2600000L);
+            long l = 2600000L;
+            loanCategory.setAmount(l);
             loanCategoryService.saveOrUpdate(loanCategory);
             loan.setLoanCategory(loanCategory);
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
+            Card card = setBankForPayment();
+            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.DISCONTINUOUS_SPECIALIZED_DOCTORATE)) {
-            loanCategory.setAmount(6500000L);
+            long l = 6500000L;
+            loanCategory.setAmount(l);
             loanCategoryService.saveOrUpdate(loanCategory);
             loan.setLoanCategory(loanCategory);
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
+            Card card = setBankForPayment();
+            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            cardService.saveOrUpdate(card);
         }
         System.out.println("SUCCESSFULLY ADDED");
         LogInMenu.menuAfterLogIn();
     }
 
+
+    private static Card setBankForPayment() {
+        Student student = (Student) SecurityContext.getCurrentUser();
+        List<Card> card1 = student.getCard();
+        HashMap<Integer, Card> cards = new HashMap<>();
+        int i = 0;
+        for (Card c : card1) {
+            cards.put(i, c);
+            i++;
+        }
+        System.out.println(cards);
+        System.out.println("Which card do you want to put money into : ");
+        int i1 = scanner.nextInt();
+        return cards.get(i1);
+    }
+
     private static void housingLoan() throws ParseException {
         Student student = (Student) SecurityContext.getCurrentUser();
+        //StudentSpouse studentSpouse = (StudentSpouse) SecurityContext.getCurrentUser();
         Loan loan = new Loan();
         LoanCategory loanCategory = new LoanCategory();
 
-        //to do consider student spouse!!!
+        //to do!! consider student spouse!!!
+//        if (!studentSpouse.getLoans().isEmpty() || !studentSpouse.isSheOrHeStudent()) {
+//            primaryMenuForLoanMenu();
+//        }
 
         if (loanCategory.getHousingRentalAgreementNumber() != null ||
                 student.getStudentSpouse() == null || student.isAccommodateInUniversity()
@@ -178,26 +227,39 @@ public class LoanMenu {
             for (BigCities b : BigCities.values()) {
                 if (studentCity.equals(b.name())) {
                     bigCities = true;
+                    break;
                 }
             }
             if (bigCities) {
-                loanCategory.setAmount(26000000L);
+                long l = 26000000L;
+                loanCategory.setAmount(l);
                 loanCategoryService.saveOrUpdate(loanCategory);
                 loan.setLoanCategory(loanCategory);
                 loan.setStudent(student);
                 loanService.saveOrUpdate(loan);
+                Card card = setBankForPayment();
+                card.setAmountOfAccount(BigDecimal.valueOf(l));
+                cardService.saveOrUpdate(card);
             } else if (equals) {
-                loanCategory.setAmount(32000000L);
+                long l = 32000000L;
+                loanCategory.setAmount(l);
                 loanCategoryService.saveOrUpdate(loanCategory);
                 loan.setLoanCategory(loanCategory);
                 loan.setStudent(student);
                 loanService.saveOrUpdate(loan);
+                Card card = setBankForPayment();
+                card.setAmountOfAccount(BigDecimal.valueOf(l));
+                cardService.saveOrUpdate(card);
             } else {
-                loanCategory.setAmount(19500000L);
+                long l = 19500000L;
+                loanCategory.setAmount(l);
                 loanCategoryService.saveOrUpdate(loanCategory);
                 loan.setLoanCategory(loanCategory);
                 loan.setStudent(student);
                 loanService.saveOrUpdate(loan);
+                Card card = setBankForPayment();
+                card.setAmountOfAccount(BigDecimal.valueOf(l));
+                cardService.saveOrUpdate(card);
             }
         }
         System.out.println("SUCCESSFULLY ADDED");
@@ -249,7 +311,7 @@ public class LoanMenu {
 
         if (userDate.compareTo(date2) >= 0 && userDate.compareTo(date3) <= 0 ||
                 userDate.compareTo(date4) >= 0 && userDate.compareTo(date5) <= 0) {
-            System.out.println("Loan can be obtained beacuse of the date but it needs more information!!!! ");
+            System.out.println("Loan can be obtained because of the date but it needs more information!!!! ");
         } else {
             throw new IllegalArgumentException("Loan can only be obtained between " +
                     "1402-08-01 and 1402-08-07 or 1402-10-25 and 1402-11-02");

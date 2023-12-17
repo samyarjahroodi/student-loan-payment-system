@@ -12,4 +12,14 @@ public class StudentSpouseServiceImpl
     public StudentSpouseServiceImpl(StudentSpouseRepositoryImpl repository) {
         super(repository);
     }
+
+    @Override
+    public StudentSpouse findStudentByNationalCode(String nationalCode) {
+        return repository.findStudentByNationalCode(nationalCode);
+    }
+
+    @Override
+    public boolean logIn(String nationalCode, String password) {
+        return repository.logIn(nationalCode, password);
+    }
 }

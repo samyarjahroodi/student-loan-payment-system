@@ -1,7 +1,9 @@
 package menu;
 
 import entity.student.Student;
+import entity.student.StudentSpouse;
 import service.impl.StudentServiceImpl;
+import service.impl.StudentSpouseServiceImpl;
 import utility.ApplicationContext;
 import utility.SecurityContext;
 
@@ -10,7 +12,8 @@ import java.util.Scanner;
 
 public class LogInMenu {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final StudentServiceImpl service = ApplicationContext.getSTUDENT_SERVICE();
+    private static final StudentServiceImpl studentService = ApplicationContext.getSTUDENT_SERVICE();
+    private static final StudentSpouseServiceImpl spouseService = ApplicationContext.getSTUDENT_SPOUSE_SERVICE();
 
     public static void loginMenu() throws ParseException {
         while (true) {
@@ -19,10 +22,16 @@ public class LogInMenu {
             System.out.println("Enter your password");
             String password = scanner.nextLine();
             Student student;
-            if (service.logIn(nationalCode, password)) {
+            StudentSpouse studentSpouse;
+            if (studentService.logIn(nationalCode, password) || spouseService.logIn(nationalCode, password)) {
                 System.out.println("Login successfully");
-                student = service.findStudentByNationalCode(nationalCode);
-                SecurityContext.fillContext(student);
+                student = studentService.findStudentByNationalCode(nationalCode);
+                studentSpouse = spouseService.findStudentByNationalCode(nationalCode);
+                if (student != null) {
+                    SecurityContext.fillContext(student);
+                } else {
+                    SecurityContext.fillContext(studentSpouse);
+                }
                 menuAfterLogIn();
                 break;
             } else {

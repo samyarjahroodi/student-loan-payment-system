@@ -8,13 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import java.util.Date;
 
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@SuppressWarnings("unused")
 @Entity
 @Builder
+@SuppressWarnings("unused")
 public class PaymentReport extends BaseEntity<Integer> {
     @ManyToOne
     private Loan loan;

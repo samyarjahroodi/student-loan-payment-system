@@ -19,14 +19,7 @@ public class StudentSpouse extends Person {
     @Column(name = "is_student", columnDefinition = "boolean default false")
     private boolean isSheOrHeStudent;
 
-    @OneToOne
-    private Student student;
+//    @OneToOne
+//    private Student student;
 
-    public StudentSpouse(String firstname, String lastname, String fatherName, String motherName,
-                         String idOfBirthCertificate, String nationalCode, Date dateOfBirth,
-                         boolean isSheOrHeStudent, Student student) {
-        super(firstname, lastname, fatherName, motherName, idOfBirthCertificate, nationalCode, dateOfBirth);
-        this.isSheOrHeStudent = isSheOrHeStudent;
-        this.student = student;
-    }
 }

@@ -110,7 +110,7 @@ public class SignUpMenu {
 
         service.saveOrUpdate(student);
         System.out.println("SUCCESSFUL!!!");
-
+        MainMenu.signUpMenu();
     }
 
     private static void accommodateInUniversity() {
@@ -213,19 +213,26 @@ public class SignUpMenu {
 
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 studentSpouse.setDateOfBirth(formatter.parse(date));
-                isSpouseStudent();
+                //isSpouseStudent();
+                String string = """
+                        Is your spouse student:
+                        1-true
+                        2-false
+                        """;
+                System.out.println(string);
+                int input1 = scanner.nextInt();
+                switch (input1) {
+                    case 1 -> studentSpouse.setSheOrHeStudent(true);
+                    case 2 -> studentSpouse.setSheOrHeStudent(false);
+                    default -> System.out.println("invalid input");
+                }
+
+                //studentSpouse.setStudent(student);
                 studentSpouseService.saveOrUpdate(studentSpouse);
-                studentSpouse.setStudent(student);
+                student.setStudentSpouse(studentSpouse);
             }
             case 2 -> student.setMarried(false);
         }
-
-//        Integer id = student.getStudentSpouse().getId();
-//        System.out.println(id);
-//        System.out.println(id);
-//        System.out.println(id);
-//        System.out.println(id);
-//        service.saveOrUpdate(student);
     }
 
 
@@ -247,7 +254,6 @@ public class SignUpMenu {
             case 2 -> studentSpouse.setSheOrHeStudent(false);
             default -> System.out.println("invalid input");
         }
+
     }
-
-
 }

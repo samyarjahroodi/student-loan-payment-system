@@ -14,7 +14,8 @@ import java.util.List;
 @Builder
 @SuppressWarnings("unused")
 public class LoanCategory extends BaseEntity<Integer> {
-    @Column(name = "type_of_loan")
+    @Column(name = "type_of_loan" )
+    @Enumerated(EnumType.STRING)
     private TypeOfLoan typeOfLoan;
 
     private Long amount;

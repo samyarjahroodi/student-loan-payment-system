@@ -3,6 +3,8 @@ package utility;
 import entity.Person;
 import lombok.Getter;
 
+import java.time.LocalDate;
+
 @SuppressWarnings("unused")
 public class SecurityContext {
     @Getter
@@ -15,5 +17,12 @@ public class SecurityContext {
 
     public static Integer getCurrentUserId() {
         return currentUser.getId();
+    }
+
+    @Getter
+    private static LocalDate todayDate;
+
+    public static void fillContext(LocalDate today) {
+        todayDate = today;
     }
 }

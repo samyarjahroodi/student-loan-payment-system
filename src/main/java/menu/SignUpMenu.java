@@ -79,18 +79,13 @@ public class SignUpMenu {
         student.setEntranceYear(Integer.parseInt(getInput("Enter Entrance Year: ")));
 
 
-        String password;
-        do {
-            password = getInput("Enter your password: ");
-        } while (!Validation.isValidPassword(password));
+        String password = Validation.generateRandomPassword();
+        System.out.println("Your password is: " + password);
         student.setPassword(password);
-
-        System.out.println(getIdOfStudent(student));
 
         showGrade();
 
         giveSpouse();
-
 
         student.setNameOfUniversity(getInput("Name of the university : "));
 
@@ -213,7 +208,6 @@ public class SignUpMenu {
 
                 DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
                 studentSpouse.setDateOfBirth(formatter.parse(date));
-                //isSpouseStudent();
                 String string = """
                         Is your spouse student:
                         1-true
@@ -226,8 +220,6 @@ public class SignUpMenu {
                     case 2 -> studentSpouse.setSheOrHeStudent(false);
                     default -> System.out.println("invalid input");
                 }
-
-                //studentSpouse.setStudent(student);
                 studentSpouseService.saveOrUpdate(studentSpouse);
                 student.setStudentSpouse(studentSpouse);
             }
@@ -235,25 +227,8 @@ public class SignUpMenu {
         }
     }
 
-
     private static Integer getIdOfStudent(Student student) {
         return student.getId();
     }
 
-
-    private static void isSpouseStudent() {
-        String string = """
-                Is your spouse student:
-                1-true
-                2-false
-                """;
-        System.out.println(string);
-        int input = scanner.nextInt();
-        switch (input) {
-            case 1 -> studentSpouse.setSheOrHeStudent(true);
-            case 2 -> studentSpouse.setSheOrHeStudent(false);
-            default -> System.out.println("invalid input");
-        }
-
-    }
 }

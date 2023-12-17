@@ -2,9 +2,11 @@ package entity.loan;
 
 import base.entity.BaseEntity;
 import entity.student.Student;
+import entity.student.StudentSpouse;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -27,4 +29,8 @@ public class Loan extends BaseEntity<Integer> {
     @Column(name = "payment_report")
     private List<PaymentReport> paymentReport;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private StudentSpouse studentSpouse;
+
+    private LocalDate dateThatLoanHasBeenGet;
 }

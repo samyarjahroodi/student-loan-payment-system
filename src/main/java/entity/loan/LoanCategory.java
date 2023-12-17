@@ -4,6 +4,7 @@ import base.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.util.List;
 @Builder
 @SuppressWarnings("unused")
 public class LoanCategory extends BaseEntity<Integer> {
-    @Column(name = "type_of_loan" )
+    @Column(name = "type_of_loan")
     @Enumerated(EnumType.STRING)
     private TypeOfLoan typeOfLoan;
 
@@ -27,9 +28,7 @@ public class LoanCategory extends BaseEntity<Integer> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanCategory")
     private List<Loan> loan;
 
-    private String city;
     @Column(name = "housing_rental_agreement_number")
     private String housingRentalAgreementNumber;
-
 
 }

@@ -1,5 +1,6 @@
 package validation;
 
+import java.security.SecureRandom;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -8,11 +9,35 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class Validation {
-    public static Boolean isValidPassword(String password) {
-        String regex = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[a-z])(?=.*[@#$%&]).{8,}$";
-        Pattern pattern = Pattern.compile(regex);
-        return pattern.matcher(password).matches();
+    public static String generateRandomPassword() {
+        String uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        String specialCharacters = "!@#$%^&";
+        String lowercaseLettersAndNumbers = "abcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder password = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+        password.append(uppercaseLetters.charAt(random.nextInt(uppercaseLetters.length())));
+        password.append(specialCharacters.charAt(random.nextInt(specialCharacters.length())));
+
+        for (int i = 2; i < 8; i++) {
+            int randomIndex = random.nextInt(lowercaseLettersAndNumbers.length());
+            char randomChar = lowercaseLettersAndNumbers.charAt(randomIndex);
+            password.append(randomChar);
+        }
+        String shuffledPassword = shuffleString(password.toString());
+        return shuffledPassword;
     }
+
+    private static String shuffleString(String input) {
+        char[] characters = input.toCharArray();
+        for (int i = characters.length - 1; i > 0; i--) {
+            int randomIndex = (int) (Math.random() * (i + 1));
+            char temp = characters[i];
+            characters[i] = characters[randomIndex];
+            characters[randomIndex] = temp;
+        }
+        return new String(characters);
+    }
+
 
     public static Boolean isValidNationalCode(String nationalCode) {
         String regex = "\\d{10}";
@@ -52,22 +77,9 @@ public class Validation {
     }
 
     public static boolean cvv2Validation(String cvv2) {
-        String pattern = "\\d{3}";
+        String pattern = "\\d{3,4}";
         Pattern regex = Pattern.compile(pattern);
         Matcher matcher = regex.matcher(String.valueOf(cvv2));
         return matcher.matches();
     }
-
-    public static boolean expireDateValidation(Date date) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        dateFormat.setLenient(false);
-        try {
-            String formattedDate = dateFormat.format(date);
-            Date parsedDate = dateFormat.parse(formattedDate);
-            return parsedDate.after(new Date());
-        } catch (ParseException e) {
-            return false;
-        }
-    }
-
 }

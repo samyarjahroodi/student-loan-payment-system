@@ -17,6 +17,7 @@ import java.util.Date;
 @Builder
 @SuppressWarnings("unused")
 public class PaymentReport extends BaseEntity<Integer> {
+
     @ManyToOne
     private Loan loan;
 

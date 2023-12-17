@@ -5,6 +5,7 @@ import entity.student.Student;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -30,12 +31,5 @@ public class Card extends BaseEntity<Integer> {
     @ManyToOne
     private Student student;
 
-    public Card(Integer integer, String cardNumber, int cvv2, Date expireDateOfCart, Bank bank, Student student) {
-        super(integer);
-        this.cardNumber = cardNumber;
-        this.cvv2 = cvv2;
-        this.expireDateOfCart = expireDateOfCart;
-        this.bank = bank;
-        this.student = student;
-    }
+    private BigDecimal amountOfAccount;
 }

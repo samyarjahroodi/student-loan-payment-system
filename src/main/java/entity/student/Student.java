@@ -9,6 +9,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -55,6 +56,5 @@ public class Student extends Person {
     private StudentSpouse studentSpouse;
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
-    private List<Loan> loans;
-
+    private List<Loan> loans = new ArrayList<>();
 }

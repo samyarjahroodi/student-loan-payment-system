@@ -14,7 +14,7 @@ public class LogInMenu {
 
     public static void loginMenu() throws ParseException {
         while (true) {
-            System.out.println("Enter your national code");
+            System.out.println("Enter your username");
             String nationalCode = scanner.nextLine();
             System.out.println("Enter your password");
             String password = scanner.nextLine();
@@ -31,7 +31,7 @@ public class LogInMenu {
         }
     }
 
-    private static void menuAfterLogIn() throws ParseException {
+    public static void menuAfterLogIn() throws ParseException {
         String string = """
                 1-get loan
                 2-loan payment

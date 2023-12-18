@@ -23,22 +23,24 @@ public class LogInMenu {
             String password = scanner.nextLine();
             Student student;
             StudentSpouse studentSpouse;
-            if (studentService.logIn(nationalCode, password) || spouseService.logIn(nationalCode, password)) {
+            if (studentService.logIn(nationalCode, password)) {
                 System.out.println("Login successfully");
                 student = studentService.findStudentByNationalCode(nationalCode);
+                SecurityContext.fillContext(student);
+                menuAfterLogIn();
+                break;
+            } else if (spouseService.logIn(nationalCode, password)) {
+                System.out.println("Login successfully");
                 studentSpouse = spouseService.findStudentByNationalCode(nationalCode);
-                if (student != null) {
-                    SecurityContext.fillContext(student);
-                } else {
-                    SecurityContext.fillContext(studentSpouse);
-                }
+                SecurityContext.fillContext(studentSpouse);
                 menuAfterLogIn();
                 break;
             } else {
-                System.out.println("Invalid input!");
+                System.out.println("Invalid input");
             }
         }
     }
+
 
     public static void menuAfterLogIn() throws ParseException {
         String string = """

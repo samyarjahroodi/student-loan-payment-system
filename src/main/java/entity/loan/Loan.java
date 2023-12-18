@@ -9,12 +9,11 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-
+@SuppressWarnings("unused")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@SuppressWarnings("unused")
 @Entity
 @Builder
 public class Loan extends BaseEntity<Integer> {

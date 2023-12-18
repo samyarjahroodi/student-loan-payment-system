@@ -48,6 +48,8 @@ public class Student extends Person {
 
     private String city;
 
+//    private String address;
+
     @OneToOne
     private StudentSpouse studentSpouse;
 

@@ -5,6 +5,7 @@ import entity.card.Card;
 import entity.loan.*;
 import entity.student.Grade;
 import entity.student.Student;
+import entity.student.StudentSpouse;
 import entity.university.TypeOfGovernmentalUniversity;
 import entity.university.TypeOfUniversity;
 import service.impl.CardServiceImpl;
@@ -51,7 +52,48 @@ public class LoanMenu {
         }
     }
 
+    private static Boolean checkIfStudentIsGraduated() throws ParseException {
+        Student student = (Student) SecurityContext.getCurrentUser();
+        Grade grade = student.getGrade();
+        int graduatedYear;
+        LocalDate date = getDate();
+        int year = date.getYear();
+        if (grade.equals(Grade.DISCONTINUOUS_BACHELOR) || grade.equals(Grade.CONTINUOUS_BACHELOR)) {
+            graduatedYear = 4;
+            int timeThatStudentShouldBeGraduated = student.getEntranceYear() + graduatedYear;
+            if (year > timeThatStudentShouldBeGraduated) {
+                System.out.println("you are graduated you cannot get any loan!");
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (grade.equals(Grade.ASSOCIATE) || grade.equals(Grade.DISCONTINUOUS_MASTER)) {
+            graduatedYear = 2;
+            int timeThatStudentShouldBeGraduated = student.getEntranceYear() + graduatedYear;
+            if (year > timeThatStudentShouldBeGraduated) {
+                System.out.println("you are graduated you cannot get any loan!");
+                return true;
+            } else {
+                return false;
+            }
+        }
+        if (grade.equals(Grade.CONTINUOUS_MASTER) || grade.equals(Grade.DOCTORATE) || grade.equals(Grade.DISCONTINUOUS_SPECIALIZED_DOCTORATE)) {
+            graduatedYear = 6;
+            int timeThatStudentShouldBeGraduated = student.getEntranceYear() + graduatedYear;
+            if (year > timeThatStudentShouldBeGraduated) {
+                System.out.println("you are graduated you cannot get any loan!");
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return null;
+    }
+
+
     private static LocalDate getDate() throws ParseException {
+
         String inputPrompt = """
                 You can get a loan from 1TH of ABAN to 7TH of ABAN
                           or
@@ -69,6 +111,9 @@ public class LoanMenu {
 
 
     public static void tuitionLoan() throws ParseException {
+        if (Boolean.TRUE.equals(checkIfStudentIsGraduated())) {
+            primaryMenuForLoanMenu();
+        }
         LocalDate localDate = getDate();
         SecurityContext.fillContext(localDate);
         Student student = (Student) SecurityContext.getCurrentUser();
@@ -126,6 +171,9 @@ public class LoanMenu {
     }
 
     private static void educationLoan() throws ParseException {
+        if (Boolean.TRUE.equals(checkIfStudentIsGraduated())) {
+            primaryMenuForLoanMenu();
+        }
         LocalDate localDate = getDate();
         SecurityContext.fillContext(localDate);
         Student student = (Student) SecurityContext.getCurrentUser();
@@ -196,7 +244,9 @@ public class LoanMenu {
 
     private static void housingLoan() throws ParseException {
         Student student = (Student) SecurityContext.getCurrentUser();
-        //StudentSpouse studentSpouse = (StudentSpouse) SecurityContext.getCurrentUser();
+        if (student == null) {
+            StudentSpouse studentSpouse = (StudentSpouse) SecurityContext.getCurrentUser();
+        }
         Loan loan = new Loan();
         LoanCategory loanCategory = new LoanCategory();
 
@@ -204,6 +254,7 @@ public class LoanMenu {
 //        if (!studentSpouse.getLoans().isEmpty() || !studentSpouse.isSheOrHeStudent()) {
 //            primaryMenuForLoanMenu();
 //        }
+
 
         if (loanCategory.getHousingRentalAgreementNumber() != null ||
                 student.getStudentSpouse() == null || student.isAccommodateInUniversity()
@@ -219,7 +270,7 @@ public class LoanMenu {
         }
         loanCategory.setTypeOfLoan(TypeOfLoan.HOUSING_LOAN);
         loanCategory.setPaymentType(PaymentType.ONE_EACH_LEVEL);
-        String capital = "tehran";
+        String capital = "TEHRAN";
         boolean equals = student.getCity().equals(capital);
         String studentCity = student.getCity();
         if (studentCity != null) {
@@ -307,12 +358,14 @@ public class LoanMenu {
         Date date3 = dateFormat.parse("1402-08-07");
         Date date4 = dateFormat.parse("1402-10-25");
         Date date5 = dateFormat.parse("1402-11-02");
+        Date date6 = dateFormat.parse("1405-08-01");
+        Date date7 = dateFormat.parse("1405-08-07");
 
-
-        if (userDate.compareTo(date2) >= 0 && userDate.compareTo(date3) <= 0 ||
-                userDate.compareTo(date4) >= 0 && userDate.compareTo(date5) <= 0) {
+        if ((userDate.compareTo(date2) >= 0 && userDate.compareTo(date3) <= 0) ||
+                (userDate.compareTo(date4) >= 0 && userDate.compareTo(date5) <= 0) ||
+                        userDate.before(date7) && userDate.after(date6)) {
             System.out.println("Loan can be obtained because of the date but it needs more information!!!! ");
-        } else {
+        } else{
             throw new IllegalArgumentException("Loan can only be obtained between " +
                     "1402-08-01 and 1402-08-07 or 1402-10-25 and 1402-11-02");
         }

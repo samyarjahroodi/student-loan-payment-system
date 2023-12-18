@@ -4,7 +4,6 @@ import base.entity.BaseEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 import java.util.List;
 
 @AllArgsConstructor

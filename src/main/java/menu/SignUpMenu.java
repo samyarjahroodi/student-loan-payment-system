@@ -99,7 +99,7 @@ public class SignUpMenu {
             student.setTypeOfGovernmentalUniversity(TypeOfGovernmentalUniversity.NULL);
         }
 
-        student.setCity(getInput("City : "));
+        student.setCity(getInput("City : ").toUpperCase(Locale.ROOT));
 
         cardMenu();
 

@@ -2,6 +2,7 @@ package repository;
 
 import base.reposiotry.BaseEntityRepository;
 import entity.loan.PaymentReport;
+import entity.loan.TypeOfLoan;
 import entity.student.Student;
 
 import java.util.List;
@@ -11,5 +12,10 @@ public interface PaymentReportRepository
 
     List<PaymentReport> unpaidInstallments(Student student);
 
-//    Double totalAmountOfPayments(List<PaymentReport> paymentReport);
+    List<PaymentReport> paidInstallments(Student student);
+
+    void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan);
+
+    List<PaymentReport> unpaidInstallmentsBasedOnTypeOfLoan(Student student, TypeOfLoan typeOfLoan);
+
 }

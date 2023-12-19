@@ -16,7 +16,7 @@ import java.util.Date;
 @Entity
 @Builder
 @SuppressWarnings("unused")
-@ToString
+
 public class PaymentReport extends BaseEntity<Integer> {
 
     @ManyToOne
@@ -35,5 +35,17 @@ public class PaymentReport extends BaseEntity<Integer> {
 
     @Column(name = "is_paid", columnDefinition = "boolean default false")
     private boolean isPaid;
+
+    @Override
+    public String toString() {
+        return "PaymentReport{" +
+                "\nloan=" + loan +
+                "\nloanNumber=" + loanNumber +
+                "\namountPerPayment=" + amountPerPayment +
+                "\ndueDate=" + dueDate +
+                "\npaymentDate=" + paymentDate +
+                "\nisPaid=" + isPaid +
+                "\n}";
+    }
 
 }

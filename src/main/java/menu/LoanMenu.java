@@ -19,10 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 @SuppressWarnings("unused")
@@ -52,11 +49,12 @@ public class LoanMenu {
         }
     }
 
-    private static Boolean checkIfStudentIsGraduated() throws ParseException {
+    public static Boolean checkIfStudentIsGraduated() throws ParseException {
         Student student = (Student) SecurityContext.getCurrentUser();
         Grade grade = student.getGrade();
         int graduatedYear;
         LocalDate date = getDate();
+        SecurityContext.fillContext(date);
         int year = date.getYear();
         if (grade.equals(Grade.DISCONTINUOUS_BACHELOR) || grade.equals(Grade.CONTINUOUS_BACHELOR)) {
             graduatedYear = 4;
@@ -114,8 +112,9 @@ public class LoanMenu {
         if (Boolean.TRUE.equals(checkIfStudentIsGraduated())) {
             primaryMenuForLoanMenu();
         }
-        LocalDate localDate = getDate();
-        SecurityContext.fillContext(localDate);
+//        LocalDate localDate = getDate();
+//        SecurityContext.fillContext(localDate);
+        LocalDate todayDate = SecurityContext.getTodayDate();
         Student student = (Student) SecurityContext.getCurrentUser();
         if (studentHasActiveTuitionLoan(student)) {
             System.out.println("you have already taken this loan in current term");
@@ -123,7 +122,7 @@ public class LoanMenu {
         }
         LoanCategory loanCategory = new LoanCategory();
         Loan loan = new Loan();
-        loan.setDateThatLoanHasBeenGet(localDate);
+        loan.setDateThatLoanHasBeenGet(todayDate);
         if ((student.getTypeOfUniversity().equals(TypeOfUniversity.GOVERNMENTAL) &&
                 student.getTypeOfGovernmentalUniversity().equals(TypeOfGovernmentalUniversity.DAILY))
         ) {
@@ -174,8 +173,9 @@ public class LoanMenu {
         if (Boolean.TRUE.equals(checkIfStudentIsGraduated())) {
             primaryMenuForLoanMenu();
         }
-        LocalDate localDate = getDate();
-        SecurityContext.fillContext(localDate);
+        LocalDate todayDate = SecurityContext.getTodayDate();
+        //LocalDate localDate = getDate();
+        //SecurityContext.fillContext(localDate);
         Student student = (Student) SecurityContext.getCurrentUser();
         if (studentHasActiveEducationalLoan(student)) {
             System.out.println("you have already taken this loan in current term");
@@ -185,7 +185,7 @@ public class LoanMenu {
         LoanCategory loanCategory = new LoanCategory();
         loanCategory.setTypeOfLoan(TypeOfLoan.EDUCATIONAL_LOAN);
         loanCategory.setPaymentType(PaymentType.ONE_EACH_TERM);
-        loan.setDateThatLoanHasBeenGet(localDate);
+        loan.setDateThatLoanHasBeenGet(todayDate);
         Grade grade = student.getGrade();
 
         if (grade.equals(Grade.ASSOCIATE) || grade.equals(Grade.CONTINUOUS_BACHELOR) ||
@@ -231,7 +231,7 @@ public class LoanMenu {
         Student student = (Student) SecurityContext.getCurrentUser();
         List<Card> card1 = student.getCard();
         HashMap<Integer, Card> cards = new HashMap<>();
-        int i = 0;
+        int i = 1;
         for (Card c : card1) {
             cards.put(i, c);
             i++;
@@ -244,20 +244,15 @@ public class LoanMenu {
 
     private static void housingLoan() throws ParseException {
         Student student = (Student) SecurityContext.getCurrentUser();
+        LocalDate todayDate = SecurityContext.getTodayDate();
         if (student == null) {
             StudentSpouse studentSpouse = (StudentSpouse) SecurityContext.getCurrentUser();
         }
         Loan loan = new Loan();
         LoanCategory loanCategory = new LoanCategory();
 
-        //to do!! consider student spouse!!!
-//        if (!studentSpouse.getLoans().isEmpty() || !studentSpouse.isSheOrHeStudent()) {
-//            primaryMenuForLoanMenu();
-//        }
-
-
         if (loanCategory.getHousingRentalAgreementNumber() != null ||
-                student.getStudentSpouse() == null || student.isAccommodateInUniversity()
+                Objects.requireNonNull(student).getStudentSpouse() == null || student.isAccommodateInUniversity()
         ) {
             System.out.println("You are not allowed to get housing loan");
             primaryMenuForLoanMenu();
@@ -270,7 +265,9 @@ public class LoanMenu {
         }
         loanCategory.setTypeOfLoan(TypeOfLoan.HOUSING_LOAN);
         loanCategory.setPaymentType(PaymentType.ONE_EACH_LEVEL);
+        loan.setDateThatLoanHasBeenGet(todayDate);
         String capital = "TEHRAN";
+        assert student != null;
         boolean equals = student.getCity().equals(capital);
         String studentCity = student.getCity();
         if (studentCity != null) {
@@ -363,9 +360,9 @@ public class LoanMenu {
 
         if ((userDate.compareTo(date2) >= 0 && userDate.compareTo(date3) <= 0) ||
                 (userDate.compareTo(date4) >= 0 && userDate.compareTo(date5) <= 0) ||
-                        userDate.before(date7) && userDate.after(date6)) {
+                userDate.before(date7) && userDate.after(date6)) {
             System.out.println("Loan can be obtained because of the date but it needs more information!!!! ");
-        } else{
+        } else {
             throw new IllegalArgumentException("Loan can only be obtained between " +
                     "1402-08-01 and 1402-08-07 or 1402-10-25 and 1402-11-02");
         }

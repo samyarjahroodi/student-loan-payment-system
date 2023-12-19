@@ -28,10 +28,11 @@ public class Student extends Person {
 
     @Column(nullable = false, name = "entrance_year")
     @Max(value = 1403, message = "incorrect input value")
-    @Min(value = 1396, message = "incorrect input value")
+    @Min(value = 1399, message = "incorrect input value")
     private Integer entranceYear;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Grade grade;
 
     @Column(name = "is_married")
@@ -42,8 +43,10 @@ public class Student extends Person {
     @Column(name = "name")
     private String nameOfUniversity;
 
+    @Enumerated(EnumType.STRING)
     private TypeOfUniversity typeOfUniversity;
 
+    @Enumerated(EnumType.STRING)
     private TypeOfGovernmentalUniversity typeOfGovernmentalUniversity;
 
     private String city;

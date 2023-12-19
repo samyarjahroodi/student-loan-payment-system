@@ -16,6 +16,7 @@ import java.util.Date;
 @Entity
 @Builder
 @SuppressWarnings("unused")
+@ToString
 public class PaymentReport extends BaseEntity<Integer> {
 
     @ManyToOne
@@ -24,7 +25,7 @@ public class PaymentReport extends BaseEntity<Integer> {
     @Column(name = "loan_number")
     private int loanNumber;
 
-    private Long amountPerPayment;
+    private Double amountPerPayment;
 
     @Column(name = "due_date")
     private Date dueDate;

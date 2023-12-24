@@ -90,15 +90,16 @@ public class PaymentMenu {
 
     private static LocalDate dateOfPaymentForStudent() {
         System.out.println("Enter date (yyyy-MM-dd): ");
-        String date = scanner.next();
+        String input = scanner.next();
+        String datePart = input.substring(input.indexOf('=') + 1);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate parse = LocalDate.parse(date, formatter);
-        return parse;
+        LocalDate parsedDate = LocalDate.parse(datePart, formatter);
+        return parsedDate;
     }
 
 
     private static void payInstallments() throws ParseException {
-        //checkCard();
+        checkCard();
         Student student = (Student) SecurityContext.getCurrentUser();
         String string = """
                 1-Tuition loan
@@ -113,6 +114,13 @@ public class PaymentMenu {
                 System.out.println("Enter the id : ");
                 int i = scanner.nextInt();
                 LocalDate localDate = dateOfPaymentForStudent();
+                if (i == 60) {
+                    PaymentReport paymentReportBasedOnLoanNumber = paymentReportService.getPaymentReportBasedOnLoanNumber(student, i - 1);
+                    LocalDate dueDate = paymentReportBasedOnLoanNumber.getDueDate();
+                    if (localDate.isAfter(dueDate)) {
+                        paymentReportService.payPaymentReport(student, i, TypeOfLoan.STUDENT_TUITION_LOAN, localDate);
+                    }
+                }
                 PaymentReport paymentReportBasedOnLoanNumber = paymentReportService.getPaymentReportBasedOnLoanNumber(student, i + 1);
                 LocalDate dueDate = paymentReportBasedOnLoanNumber.getDueDate();
 
@@ -129,6 +137,14 @@ public class PaymentMenu {
                 System.out.println("Enter the id : ");
                 int i = scanner.nextInt();
                 LocalDate localDate = dateOfPaymentForStudent();
+                if (i == 60) {
+                    PaymentReport paymentReportBasedOnLoanNumber = paymentReportService.getPaymentReportBasedOnLoanNumber(student, i - 1);
+                    LocalDate dueDate = paymentReportBasedOnLoanNumber.getDueDate();
+                    if (localDate.isAfter(dueDate)) {
+                        paymentReportService.payPaymentReport(student, i, TypeOfLoan.EDUCATIONAL_LOAN, localDate);
+                        paymentMenu();
+                    }
+                }
                 PaymentReport paymentReportBasedOnLoanNumber = paymentReportService.getPaymentReportBasedOnLoanNumber(student, i + 1);
                 LocalDate dueDate = paymentReportBasedOnLoanNumber.getDueDate();
 
@@ -145,6 +161,14 @@ public class PaymentMenu {
                 System.out.println("Enter the id : ");
                 int i = scanner.nextInt();
                 LocalDate localDate = dateOfPaymentForStudent();
+                if (i == 60) {
+                    PaymentReport paymentReportBasedOnLoanNumber = paymentReportService.getPaymentReportBasedOnLoanNumber(student, i - 1);
+                    LocalDate dueDate = paymentReportBasedOnLoanNumber.getDueDate();
+                    if (localDate.isAfter(dueDate)) {
+                        paymentReportService.payPaymentReport(student, i, TypeOfLoan.HOUSING_LOAN, localDate);
+                        paymentMenu();
+                    }
+                }
                 PaymentReport paymentReportBasedOnLoanNumber = paymentReportService.getPaymentReportBasedOnLoanNumber(student, i + 1);
                 LocalDate dueDate = paymentReportBasedOnLoanNumber.getDueDate();
 
@@ -172,30 +196,17 @@ public class PaymentMenu {
 
     private static void createPaymentBillForTuitionLoan() {
         Student student = (Student) SecurityContext.getCurrentUser();
-        Integer totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForTuitionLoan();
-        int initialMoney = totalAmountOfMoneyAfterInterest / 372;
+        Double totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForTuitionLoan();
+        double initialMoney = totalAmountOfMoneyAfterInterest / 372;
 
         Loan loan = loanService.loan(student, TypeOfLoan.STUDENT_TUITION_LOAN);
         List<PaymentReport> paymentReports = new ArrayList<>();
         for (int i = 1; i <= 60; i++) {
-            if (i % 12 == 0) {
+            if (i != 1 && i % 12 == 1) {
                 initialMoney = initialMoney * 2;
             }
-            Double aDouble = paymentReportService.totalAmountOfPayments(paymentReports);
-            if (aDouble > totalAmountOfMoneyAfterInterest) {
-                double remain = totalAmountOfMoneyAfterInterest - aDouble;
-                PaymentReport paymentReport = new PaymentReport();
-                paymentReport.setAmountPerPayment(remain);
-                paymentReport.setLoanNumber(i);
-                paymentReport.setDueDate(Objects.requireNonNull(creatDates()).get(i));
-                paymentReports.add(paymentReport);
-                paymentReport.setLoan(loan);
-                paymentReportService.saveOrUpdate(paymentReport);
-                break;
-            }
-
             PaymentReport paymentReport = new PaymentReport();
-            paymentReport.setAmountPerPayment((double) initialMoney);
+            paymentReport.setAmountPerPayment(initialMoney);
             paymentReport.setLoanNumber(i);
             paymentReport.setDueDate(Objects.requireNonNull(creatDates()).get(i));
             paymentReports.add(paymentReport);
@@ -207,29 +218,17 @@ public class PaymentMenu {
 
     private static void createPaymentBillForEducationalLoan() {
         Student student = (Student) SecurityContext.getCurrentUser();
-        Integer totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForEducationalLoan();
-        int initialMoney = totalAmountOfMoneyAfterInterest / 372;
+        Double totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForEducationalLoan();
+        double initialMoney = totalAmountOfMoneyAfterInterest / 372;
 
         Loan loan = loanService.loan(student, TypeOfLoan.EDUCATIONAL_LOAN);
         List<PaymentReport> paymentReports = new ArrayList<>();
         for (int i = 0; i < 60; i++) {
-            if (i % 12 == 0) {
+            if (i != 1 && i % 12 == 1) {
                 initialMoney = initialMoney * 2;
             }
-            Double aDouble = paymentReportService.totalAmountOfPayments(paymentReports);
-            if (aDouble > totalAmountOfMoneyAfterInterest) {
-                double remain = totalAmountOfMoneyAfterInterest - aDouble;
-                PaymentReport paymentReport = new PaymentReport();
-                paymentReport.setAmountPerPayment(remain);
-                paymentReport.setLoanNumber(i);
-                paymentReport.setDueDate(Objects.requireNonNull(creatDates()).get(i));
-                paymentReports.add(paymentReport);
-                paymentReport.setLoan(loan);
-                paymentReportService.saveOrUpdate(paymentReport);
-                break;
-            }
             PaymentReport paymentReport = new PaymentReport();
-            paymentReport.setAmountPerPayment((double) initialMoney);
+            paymentReport.setAmountPerPayment(initialMoney);
             paymentReport.setLoanNumber(i);
             paymentReport.setDueDate(Objects.requireNonNull(creatDates()).get(i));
             paymentReports.add(paymentReport);
@@ -240,29 +239,17 @@ public class PaymentMenu {
 
     private static void createPaymentBillForHousingLoan() {
         Student student = (Student) SecurityContext.getCurrentUser();
-        Integer totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForHousingLoan();
-        int initialMoney = totalAmountOfMoneyAfterInterest / 372;
+        Double totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForHousingLoan();
+        double initialMoney = totalAmountOfMoneyAfterInterest / 372;
 
         Loan loan = loanService.loan(student, TypeOfLoan.HOUSING_LOAN);
         List<PaymentReport> paymentReports = new ArrayList<>();
         for (int i = 1; i <= 60; i++) {
-            if (i % 12 == 0) {
+            if (i != 1 && i % 12 == 1) {
                 initialMoney = initialMoney * 2;
             }
-            Double aDouble = paymentReportService.totalAmountOfPayments(paymentReports);
-            if (aDouble > totalAmountOfMoneyAfterInterest) {
-                double remain = totalAmountOfMoneyAfterInterest - aDouble;
-                PaymentReport paymentReport = new PaymentReport();
-                paymentReport.setAmountPerPayment(remain);
-                paymentReport.setLoanNumber(i);
-                paymentReport.setDueDate(Objects.requireNonNull(creatDates()).get(i));
-                paymentReports.add(paymentReport);
-                paymentReport.setLoan(loan);
-                paymentReportService.saveOrUpdate(paymentReport);
-                break;
-            }
             PaymentReport paymentReport = new PaymentReport();
-            paymentReport.setAmountPerPayment((double) initialMoney);
+            paymentReport.setAmountPerPayment(initialMoney);
             paymentReport.setLoanNumber(i);
             paymentReport.setDueDate(Objects.requireNonNull(creatDates()).get(i));
             paymentReports.add(paymentReport);
@@ -276,7 +263,7 @@ public class PaymentMenu {
         try {
             Integer year = whenStudentIsGraduated();
             List<LocalDate> dates = new ArrayList<>();
-            LocalDate currentDate = LocalDate.of(year, 3, 21);
+            LocalDate currentDate = LocalDate.of(year, 3, 1);
             LocalDate endDate = currentDate.plusMonths(60);
             while (!currentDate.isAfter(endDate)) {
                 dates.add(currentDate);
@@ -310,10 +297,11 @@ public class PaymentMenu {
     }
 
 
-    private static Integer totalAmountOfMoneyAfterInterestForTuitionLoan() {
+    private static Double totalAmountOfMoneyAfterInterestForTuitionLoan() {
         try {
             Student student = (Student) SecurityContext.getCurrentUser();
-            return Math.toIntExact(loanCategoryService.getAmount(student, TypeOfLoan.STUDENT_TUITION_LOAN));
+            int i = Math.toIntExact(loanCategoryService.getAmount(student, TypeOfLoan.STUDENT_TUITION_LOAN));
+            return i * 1.04;
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;
@@ -335,11 +323,11 @@ public class PaymentMenu {
     }
 
 
-    private static Integer totalAmountOfMoneyAfterInterestForEducationalLoan() {
+    private static Double totalAmountOfMoneyAfterInterestForEducationalLoan() {
         try {
             Student student = (Student) SecurityContext.getCurrentUser();
-            Long singleAmount = loanCategoryService.getAmount(student, TypeOfLoan.EDUCATIONAL_LOAN);
-            return Math.toIntExact(singleAmount);
+            int singleAmount = Math.toIntExact(loanCategoryService.getAmount(student, TypeOfLoan.EDUCATIONAL_LOAN));
+            return singleAmount * 1.04;
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;
@@ -361,10 +349,11 @@ public class PaymentMenu {
     }
 
 
-    private static Integer totalAmountOfMoneyAfterInterestForHousingLoan() {
+    private static Double totalAmountOfMoneyAfterInterestForHousingLoan() {
         try {
             Student student = (Student) SecurityContext.getCurrentUser();
-            return Math.toIntExact(loanCategoryService.getAmount(student, TypeOfLoan.HOUSING_LOAN));
+            int i = Math.toIntExact(loanCategoryService.getAmount(student, TypeOfLoan.HOUSING_LOAN));
+            return i * 1.04;
         } catch (NullPointerException e) {
             e.printStackTrace();
             return null;

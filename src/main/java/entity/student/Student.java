@@ -59,4 +59,9 @@ public class Student extends Person {
 
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Loan> loans = new ArrayList<>();
+
+    @Column(name = "housing_rental_agreement_number")
+    private String housingRentalAgreementNumber;
+
+    private String address;
 }

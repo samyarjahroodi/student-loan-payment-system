@@ -27,7 +27,7 @@ public class LoanCategory extends BaseEntity<Integer> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "loanCategory")
     private List<Loan> loan;
 
-    @Column(name = "housing_rental_agreement_number")
-    private String housingRentalAgreementNumber;
+//    @Column(name = "housing_rental_agreement_number")
+//    private String housingRentalAgreementNumber;
 
 }

@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface PaymentReportService
         extends BaseEntityService<PaymentReport, Integer> {
-    Double totalAmountOfPayments(List<PaymentReport> paymentReport);
 
     List<PaymentReport> unpaidInstallments(Student student);
 

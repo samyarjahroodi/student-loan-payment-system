@@ -33,8 +33,7 @@ public class LoanMenu {
                 1-tuition loan
                 2-education loan
                 3-housing loan
-                3-login menu
-                4-previous menu
+                4-login menu
                 5-exit
                 """;
         System.out.println(string);
@@ -49,7 +48,7 @@ public class LoanMenu {
     }
 
 
-    public static Boolean checkIfStudentIsGraduated() throws ParseException {
+    public static Boolean checkIfStudentIsGraduated() {
         Student student = (Student) SecurityContext.getCurrentUser();
         Grade grade = student.getGrade();
         int graduatedYear;
@@ -285,7 +284,8 @@ public class LoanMenu {
         Loan loan = new Loan();
         LoanCategory loanCategory = new LoanCategory();
 
-        if (loanCategory.getHousingRentalAgreementNumber() != null ||
+        assert student != null;
+        if (student.getHousingRentalAgreementNumber() != null ||
                 Objects.requireNonNull(student).getStudentSpouse() == null || student.isAccommodateInUniversity()
         ) {
             System.out.println("You are not allowed to get housing loan");
@@ -295,13 +295,17 @@ public class LoanMenu {
                     Please enter your housing rental number
                     """;
             System.out.println(housingRentalNumber);
-            loanCategory.setHousingRentalAgreementNumber(scanner.next());
+            student.setHousingRentalAgreementNumber(scanner.next());
+            String address = """
+                    Please enter your address
+                    """;
+            System.out.println(address);
+            student.setAddress(scanner.next());
         }
         loanCategory.setTypeOfLoan(TypeOfLoan.HOUSING_LOAN);
         loanCategory.setPaymentType(PaymentType.ONE_EACH_LEVEL);
         loan.setDateThatLoanHasBeenGet(todayDate);
         String capital = "TEHRAN";
-        assert student != null;
         boolean equals = student.getCity().equals(capital);
         String studentCity = student.getCity();
         if (studentCity != null) {

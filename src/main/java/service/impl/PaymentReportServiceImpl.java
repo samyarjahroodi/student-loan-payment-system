@@ -16,7 +16,7 @@ public class PaymentReportServiceImpl
 
     @Override
     public void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan, LocalDate paymentDate) {
-        repository.payPaymentReport(student, id, typeOfLoan,paymentDate);
+        repository.payPaymentReport(student, id, typeOfLoan, paymentDate);
     }
 
     @Override
@@ -44,18 +44,5 @@ public class PaymentReportServiceImpl
     }
 
 
-    @Override
-    public Double totalAmountOfPayments(List<PaymentReport> paymentReports) {
-        if (paymentReports == null || paymentReports.isEmpty()) {
-            return 0.0;
-        }
-        double totalAmount = 0.0;
-        for (PaymentReport paymentReport : paymentReports) {
-            if (paymentReport != null && paymentReport.getAmountPerPayment() != null) {
-                totalAmount += paymentReport.getAmountPerPayment();
-            }
-        }
-        return totalAmount;
-    }
 
 }

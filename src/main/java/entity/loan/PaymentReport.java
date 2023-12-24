@@ -6,7 +6,7 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import java.util.Date;
+import java.time.LocalDate;
 
 
 @AllArgsConstructor
@@ -28,10 +28,10 @@ public class PaymentReport extends BaseEntity<Integer> {
     private Double amountPerPayment;
 
     @Column(name = "due_date")
-    private Date dueDate;
+    private LocalDate dueDate;
 
     @Column(name = "payment_date")
-    private Date paymentDate;
+    private LocalDate paymentDate;
 
     @Column(name = "is_paid", columnDefinition = "boolean default false")
     private boolean isPaid;
@@ -39,7 +39,7 @@ public class PaymentReport extends BaseEntity<Integer> {
     @Override
     public String toString() {
         return "PaymentReport{" +
-                "\nloan=" + loan +
+                "\nloan=" + (loan != null ? loan.toString() : "null") +
                 "\nloanNumber=" + loanNumber +
                 "\namountPerPayment=" + amountPerPayment +
                 "\ndueDate=" + dueDate +

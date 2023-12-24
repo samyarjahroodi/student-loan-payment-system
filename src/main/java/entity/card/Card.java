@@ -5,7 +5,9 @@ import entity.student.Student;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Date;
 
 @AllArgsConstructor
@@ -16,14 +18,13 @@ import java.util.Date;
 @Builder
 @SuppressWarnings("unused")
 public class Card extends BaseEntity<Integer> {
-    @Column(name = "card_number")
+    @Column(name = "card_number", unique = true)
     private String cardNumber;
 
     private int cvv2;
 
     @Column(name = "expire_date")
-    @Temporal(TemporalType.DATE)
-    private Date expireDateOfCart;
+    private LocalDate expireDateOfCart;
 
     @Enumerated(EnumType.STRING)
     private Bank bank;
@@ -31,15 +32,16 @@ public class Card extends BaseEntity<Integer> {
     @ManyToOne
     private Student student;
 
-    private BigDecimal amountOfAccount;
+    @Column(name = "amount_of_credit")
+    private Long amountOfAccount;
 
     @Override
     public String toString() {
         return "Card{" +
-                "cardNumber='" + cardNumber + '\'' +
+                "\ncardNumber='" + cardNumber + '\'' +
                 ", cvv2=" + cvv2 +
-                ", expireDateOfCart=" + expireDateOfCart +
-                ", bank=" + bank +
+                ", expireDateOfCart=" + expireDateOfCart + '\n' +
+                ", bank=" + bank + '\n' +
                 ", amountOfAccount=" + amountOfAccount +
                 '}';
     }

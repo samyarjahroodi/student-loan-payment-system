@@ -10,8 +10,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 public class LoanRepositoryImpl
-extends BaseEntityRepositoryImpl<Loan,Integer>
-implements LoanRepository {
+        extends BaseEntityRepositoryImpl<Loan, Integer>
+        implements LoanRepository {
     public LoanRepositoryImpl(EntityManager entityManager) {
         super(entityManager);
     }
@@ -21,7 +21,6 @@ implements LoanRepository {
         return Loan.class;
     }
 
-    @Override
     public Loan loan(Student student, TypeOfLoan typeOfLoan) {
         try {
             return entityManager.createQuery("SELECT l FROM Loan l " +
@@ -29,6 +28,7 @@ implements LoanRepository {
                             "AND l.loanCategory.typeOfLoan = :loanType", Loan.class)
                     .setParameter("student", student)
                     .setParameter("loanType", typeOfLoan)
+                    .setMaxResults(1)
                     .getSingleResult();
         } catch (NoResultException e) {
             e.printStackTrace();

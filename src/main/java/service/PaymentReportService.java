@@ -5,6 +5,7 @@ import entity.loan.PaymentReport;
 import entity.loan.TypeOfLoan;
 import entity.student.Student;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PaymentReportService
@@ -15,8 +16,10 @@ public interface PaymentReportService
 
     List<PaymentReport> paidInstallments(Student student);
 
-    void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan);
+    void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan, LocalDate paymentDate);
 
     List<PaymentReport> unpaidInstallmentsBasedOnTypeOfLoan(Student student, TypeOfLoan typeOfLoan);
+
+    PaymentReport getPaymentReportBasedOnLoanNumber(Student student, Integer id);
 
 }

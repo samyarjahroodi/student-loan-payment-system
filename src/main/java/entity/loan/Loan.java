@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @Entity
 @Builder
+//@ToString
 public class Loan extends BaseEntity<Integer> {
     @ManyToOne
     @JoinColumn(name = "loan_category")
@@ -33,4 +34,5 @@ public class Loan extends BaseEntity<Integer> {
 
     @Column(name = "date_that_loan_has_been_paid")
     private LocalDate dateThatLoanHasBeenGet;
+
 }

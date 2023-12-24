@@ -8,6 +8,9 @@ import repository.PaymentReportRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.NonUniqueResultException;
+import javax.persistence.TypedQuery;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,24 +47,46 @@ public class PaymentReportRepositoryImpl
     }
 
     @Override
-    public void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan) {
+    public PaymentReport getPaymentReportBasedOnLoanNumber(Student student, Integer id) {
+        try {
+            String jpql = "SELECT pr FROM PaymentReport pr " +
+                    "WHERE pr.loan.student = :student " +
+                    "AND pr.loanNumber = :loanNumber";
+
+            TypedQuery<PaymentReport> query = entityManager.createQuery(jpql, PaymentReport.class);
+            query.setParameter("student", student);
+            query.setParameter("loanNumber", id);
+            query.setMaxResults(1);
+
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public void payPaymentReport(Student student, Integer loanNumber, TypeOfLoan typeOfLoan, LocalDate paymentDate) {
+
         try {
             PaymentReport paymentReport = entityManager.createQuery(
                             "SELECT pr FROM PaymentReport pr " +
                                     "WHERE pr.loan.student = :student " +
-                                    "AND pr.id = :paymentReportId " +
+                                    "AND pr.loanNumber = :loanNumber " +
                                     "AND pr.loan.loanCategory.typeOfLoan = :typeOfLoan", PaymentReport.class)
                     .setParameter("student", student)
-                    .setParameter("paymentReportId", id)
+                    .setParameter("loanNumber", loanNumber)
                     .setParameter("typeOfLoan", typeOfLoan)
                     .getSingleResult();
 
+
             paymentReport.setPaid(true);
-            entityManager.merge(paymentReport);
-        } catch (NoResultException e) {
+            paymentReport.setPaymentDate(paymentDate);
+            saveOrUpdate(paymentReport);
+        } catch (NoResultException | NonUniqueResultException e) {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public List<PaymentReport> unpaidInstallmentsBasedOnTypeOfLoan(Student student, TypeOfLoan typeOfLoan) {

@@ -7,6 +7,7 @@ import entity.student.Student;
 import repository.impl.PaymentReportRepositoryImpl;
 import service.PaymentReportService;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class PaymentReportServiceImpl
@@ -14,8 +15,13 @@ public class PaymentReportServiceImpl
         implements PaymentReportService {
 
     @Override
-    public void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan) {
-        repository.payPaymentReport(student, id, typeOfLoan);
+    public void payPaymentReport(Student student, Integer id, TypeOfLoan typeOfLoan, LocalDate paymentDate) {
+        repository.payPaymentReport(student, id, typeOfLoan,paymentDate);
+    }
+
+    @Override
+    public PaymentReport getPaymentReportBasedOnLoanNumber(Student student, Integer id) {
+        return repository.getPaymentReportBasedOnLoanNumber(student, id);
     }
 
     @Override

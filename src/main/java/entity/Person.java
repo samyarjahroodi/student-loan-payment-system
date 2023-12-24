@@ -29,7 +29,7 @@ public class Person extends BaseEntity<Integer> {
     private String idOfBirthCertificate;
     @Column(nullable = false, unique = true, name = "national_code")
     private String nationalCode;
-    @Column(nullable = false, unique = true, name = "date_of_birth")
+    @Column(nullable = false, name = "date_of_birth")
     private Date dateOfBirth;
     @Column(nullable = false)
     private String password;

@@ -15,6 +15,9 @@ import validation.Validation;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 import static menu.ShowEnums.*;
@@ -136,8 +139,9 @@ public class SignUpMenu {
             expireDate = getInput("Enter your expire date (yyyy-MM-dd): ");
         } while (!Validation.isValidDate(expireDate));
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        card.setExpireDateOfCart(formatter.parse(expireDate));
-
+        Date parsedDate = formatter.parse(expireDate);
+        Instant instant = Instant.ofEpochMilli(parsedDate.getTime());
+        card.setExpireDateOfCart(LocalDate.ofInstant(instant, ZoneId.systemDefault()));
 
         String cvv2;
         do {
@@ -150,9 +154,7 @@ public class SignUpMenu {
         cardService.saveOrUpdate(card);
 
         card.setStudent(student);
-
     }
-
 
     public static void addTypeOfGovernmentalUniversity() {
         System.out.println("Which type you are : ");

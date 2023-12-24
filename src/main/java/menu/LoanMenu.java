@@ -14,9 +14,7 @@ import service.impl.LoanServiceImpl;
 import utility.ApplicationContext;
 import utility.SecurityContext;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -36,25 +34,26 @@ public class LoanMenu {
                 2-education loan
                 3-housing loan
                 3-login menu
-                4-exit
+                4-previous menu
+                5-exit
                 """;
         System.out.println(string);
         switch (scanner.nextInt()) {
             case 1 -> tuitionLoan();
             case 2 -> educationLoan();
             case 3 -> housingLoan();
-            case 4 -> LogInMenu.loginMenu();
+            case 4 -> LogInMenu.menuAfterLogIn();
             case 5 -> System.exit(0);
             default -> System.out.println("Invalid input!");
         }
     }
+
 
     public static Boolean checkIfStudentIsGraduated() throws ParseException {
         Student student = (Student) SecurityContext.getCurrentUser();
         Grade grade = student.getGrade();
         int graduatedYear;
         LocalDate date = getDate();
-        SecurityContext.fillContext(date);
         int year = date.getYear();
         if (grade.equals(Grade.DISCONTINUOUS_BACHELOR) || grade.equals(Grade.CONTINUOUS_BACHELOR)) {
             graduatedYear = 4;
@@ -90,7 +89,7 @@ public class LoanMenu {
     }
 
 
-    private static LocalDate getDate() throws ParseException {
+    private static LocalDate getDate() {
 
         String inputPrompt = """
                 You can get a loan from 1TH of ABAN to 7TH of ABAN
@@ -104,7 +103,9 @@ public class LoanMenu {
         isValidDateInOrderToGetLoan(dateString);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        return LocalDate.parse(dateString, formatter);
+        LocalDate parse = LocalDate.parse(dateString, formatter);
+        SecurityContext.fillContext(parse);
+        return parse;
     }
 
 
@@ -112,8 +113,6 @@ public class LoanMenu {
         if (Boolean.TRUE.equals(checkIfStudentIsGraduated())) {
             primaryMenuForLoanMenu();
         }
-//        LocalDate localDate = getDate();
-//        SecurityContext.fillContext(localDate);
         LocalDate todayDate = SecurityContext.getTodayDate();
         Student student = (Student) SecurityContext.getCurrentUser();
         if (studentHasActiveTuitionLoan(student)) {
@@ -141,7 +140,13 @@ public class LoanMenu {
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
             Card card = setBankForPayment();
-            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            assert card != null;
+            if (card.getAmountOfAccount() == null) {
+                card.setAmountOfAccount(l);
+            } else {
+                card.setAmountOfAccount(card.getAmountOfAccount() + l);
+            }
+
             cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.CONTINUOUS_MASTER)
                 || grade.equals(Grade.DISCONTINUOUS_MASTER)
@@ -153,7 +158,12 @@ public class LoanMenu {
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
             Card card = setBankForPayment();
-            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            assert card != null;
+            if (card.getAmountOfAccount() == null) {
+                card.setAmountOfAccount(l);
+            } else {
+                card.setAmountOfAccount(card.getAmountOfAccount() + l);
+            }
             cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.DISCONTINUOUS_SPECIALIZED_DOCTORATE)) {
             long l = 2600000L;
@@ -163,19 +173,23 @@ public class LoanMenu {
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
             Card card = setBankForPayment();
-            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            assert card != null;
+            if (card.getAmountOfAccount() == null) {
+                card.setAmountOfAccount(l);
+            } else {
+                card.setAmountOfAccount(card.getAmountOfAccount() + l);
+            }
             cardService.saveOrUpdate(card);
         }
         LogInMenu.menuAfterLogIn();
     }
+
 
     private static void educationLoan() throws ParseException {
         if (Boolean.TRUE.equals(checkIfStudentIsGraduated())) {
             primaryMenuForLoanMenu();
         }
         LocalDate todayDate = SecurityContext.getTodayDate();
-        //LocalDate localDate = getDate();
-        //SecurityContext.fillContext(localDate);
         Student student = (Student) SecurityContext.getCurrentUser();
         if (studentHasActiveEducationalLoan(student)) {
             System.out.println("you have already taken this loan in current term");
@@ -197,7 +211,12 @@ public class LoanMenu {
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
             Card card = setBankForPayment();
-            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            assert card != null;
+            if (card.getAmountOfAccount() == null) {
+                card.setAmountOfAccount(l);
+            } else {
+                card.setAmountOfAccount(card.getAmountOfAccount() + l);
+            }
             cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.CONTINUOUS_MASTER)
                 || grade.equals(Grade.DISCONTINUOUS_MASTER)
@@ -209,7 +228,12 @@ public class LoanMenu {
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
             Card card = setBankForPayment();
-            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            assert card != null;
+            if (card.getAmountOfAccount() == null) {
+                card.setAmountOfAccount(l);
+            } else {
+                card.setAmountOfAccount(card.getAmountOfAccount() + l);
+            }
             cardService.saveOrUpdate(card);
         } else if (grade.equals(Grade.DISCONTINUOUS_SPECIALIZED_DOCTORATE)) {
             long l = 6500000L;
@@ -219,7 +243,12 @@ public class LoanMenu {
             loan.setStudent(student);
             loanService.saveOrUpdate(loan);
             Card card = setBankForPayment();
-            card.setAmountOfAccount(BigDecimal.valueOf(l));
+            assert card != null;
+            if (card.getAmountOfAccount() == null) {
+                card.setAmountOfAccount(l);
+            } else {
+                card.setAmountOfAccount(card.getAmountOfAccount() + l);
+            }
             cardService.saveOrUpdate(card);
         }
         System.out.println("SUCCESSFULLY ADDED");
@@ -229,18 +258,23 @@ public class LoanMenu {
 
     private static Card setBankForPayment() {
         Student student = (Student) SecurityContext.getCurrentUser();
-        List<Card> card1 = student.getCard();
+        List<Card> card1 = student != null ? student.getCard() : Collections.emptyList();
         HashMap<Integer, Card> cards = new HashMap<>();
-        int i = 1;
+        int i = 0;
+
         for (Card c : card1) {
-            cards.put(i, c);
-            i++;
+            cards.put(i++, c);
         }
         System.out.println(cards);
-        System.out.println("Which card do you want to put money into : ");
-        int i1 = scanner.nextInt();
-        return cards.get(i1);
+        if (!cards.isEmpty()) {
+            System.out.println("Which card do you want to put money into : ");
+            int i1 = scanner.nextInt();
+            return cards.get(i1);
+        } else {
+            return null;
+        }
     }
+
 
     private static void housingLoan() throws ParseException {
         Student student = (Student) SecurityContext.getCurrentUser();
@@ -286,17 +320,28 @@ public class LoanMenu {
                 loan.setStudent(student);
                 loanService.saveOrUpdate(loan);
                 Card card = setBankForPayment();
-                card.setAmountOfAccount(BigDecimal.valueOf(l));
+                assert card != null;
+                if (card.getAmountOfAccount() == null) {
+                    card.setAmountOfAccount(l);
+                } else {
+                    card.setAmountOfAccount(card.getAmountOfAccount() + l);
+                }
+
                 cardService.saveOrUpdate(card);
             } else if (equals) {
-                long l = 32000000L;
+                Long l = 32000000L;
                 loanCategory.setAmount(l);
                 loanCategoryService.saveOrUpdate(loanCategory);
                 loan.setLoanCategory(loanCategory);
                 loan.setStudent(student);
                 loanService.saveOrUpdate(loan);
                 Card card = setBankForPayment();
-                card.setAmountOfAccount(BigDecimal.valueOf(l));
+                assert card != null;
+                if (card.getAmountOfAccount() == null) {
+                    card.setAmountOfAccount(l);
+                } else {
+                    card.setAmountOfAccount(card.getAmountOfAccount() + l);
+                }
                 cardService.saveOrUpdate(card);
             } else {
                 long l = 19500000L;
@@ -306,7 +351,13 @@ public class LoanMenu {
                 loan.setStudent(student);
                 loanService.saveOrUpdate(loan);
                 Card card = setBankForPayment();
-                card.setAmountOfAccount(BigDecimal.valueOf(l));
+                assert card != null;
+                if (card.getAmountOfAccount() == null) {
+                    card.setAmountOfAccount(l);
+                } else {
+                    card.setAmountOfAccount(card.getAmountOfAccount() + l);
+                }
+
                 cardService.saveOrUpdate(card);
             }
         }
@@ -314,6 +365,7 @@ public class LoanMenu {
 
         LogInMenu.menuAfterLogIn();
     }
+
 
     public static boolean studentHasActiveTuitionLoan(Student student) {
         List<Loan> loans = student.getLoans();
@@ -330,6 +382,7 @@ public class LoanMenu {
         }
         return false;
     }
+
 
     public static boolean studentHasActiveEducationalLoan(Student student) {
         List<Loan> loans = student.getLoans();
@@ -348,23 +401,32 @@ public class LoanMenu {
     }
 
 
-    public static void isValidDateInOrderToGetLoan(String date) throws ParseException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date userDate = dateFormat.parse(date);
-        Date date2 = dateFormat.parse("1402-08-01");
-        Date date3 = dateFormat.parse("1402-08-07");
-        Date date4 = dateFormat.parse("1402-10-25");
-        Date date5 = dateFormat.parse("1402-11-02");
-        Date date6 = dateFormat.parse("1405-08-01");
-        Date date7 = dateFormat.parse("1405-08-07");
+    public static void isValidDateInOrderToGetLoan(String date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate userDate = LocalDate.parse(date, formatter);
 
-        if ((userDate.compareTo(date2) >= 0 && userDate.compareTo(date3) <= 0) ||
-                (userDate.compareTo(date4) >= 0 && userDate.compareTo(date5) <= 0) ||
-                userDate.before(date7) && userDate.after(date6)) {
-            System.out.println("Loan can be obtained because of the date but it needs more information!!!! ");
-        } else {
-            throw new IllegalArgumentException("Loan can only be obtained between " +
-                    "1402-08-01 and 1402-08-07 or 1402-10-25 and 1402-11-02");
+        int startYear = 1399;
+        int endYear = 1410;
+
+        for (int year = startYear; year <= endYear; year++) {
+            LocalDate startDate1 = LocalDate.of(year, 8, 1);
+            LocalDate endDate1 = LocalDate.of(year, 8, 7);
+
+            LocalDate startDate2 = LocalDate.of(year, 10, 25);
+            LocalDate endDate2 = LocalDate.of(year, 11, 2);
+            try {
+                if ((userDate.isEqual(startDate1) || userDate.isAfter(startDate1)) &&
+                        (userDate.isEqual(endDate1) || userDate.isBefore(endDate1)) ||
+                        (userDate.isEqual(startDate2) || userDate.isAfter(startDate2)) &&
+                                (userDate.isEqual(endDate2) || userDate.isBefore(endDate2))) {
+                    System.out.println("Loan can be obtained because of the date but it needs more information!!!! ");
+                    SecurityContext.fillContext(userDate);
+                    return;
+                }
+            } catch (IllegalArgumentException exception) {
+                throw new IllegalArgumentException("Loan can only be obtained between " +
+                        "1402-08-01 and 1402-08-07 or 1402-10-25 and 1402-11-02 or after 1405-08-01 and before 1405-08-07 or during 1410");
+            }
         }
     }
 }

@@ -99,7 +99,7 @@ public class PaymentMenu {
 
 
     private static void payInstallments() throws ParseException {
-        checkCard();
+        //checkCard();
         Student student = (Student) SecurityContext.getCurrentUser();
         String string = """
                 1-Tuition loan
@@ -109,7 +109,11 @@ public class PaymentMenu {
         System.out.println(string);
         switch (scanner.nextInt()) {
             case 1 -> {
-                createPaymentBillForTuitionLoan();
+                if (SecurityContext.getPaymentReportsForTuitionLoan() == null) {
+                    List<PaymentReport> paymentBillForTuitionLoan = createPaymentBillForTuitionLoan();
+                    SecurityContext.fillPaymentReportForEducationalLoan(paymentBillForTuitionLoan);
+                }
+                List<PaymentReport> paymentReports = SecurityContext.getPaymentReportsForTuitionLoan();
                 System.out.println(paymentReportService.unpaidInstallmentsBasedOnTypeOfLoan(student, TypeOfLoan.STUDENT_TUITION_LOAN));
                 System.out.println("Enter the id : ");
                 int i = scanner.nextInt();
@@ -132,6 +136,11 @@ public class PaymentMenu {
                 paymentMenu();
             }
             case 2 -> {
+                if (SecurityContext.getPaymentReportsForHousingLoan() == null) {
+                    List<PaymentReport> paymentBillForEducationalLoan = createPaymentBillForEducationalLoan();
+                    SecurityContext.fillPaymentReportForEducationalLoan(paymentBillForEducationalLoan);
+                }
+                List<PaymentReport> paymentReports = SecurityContext.getPaymentReportsForEducationalLoan();
                 createPaymentBillForEducationalLoan();
                 System.out.println(paymentReportService.unpaidInstallmentsBasedOnTypeOfLoan(student, TypeOfLoan.EDUCATIONAL_LOAN));
                 System.out.println("Enter the id : ");
@@ -156,7 +165,11 @@ public class PaymentMenu {
                 paymentMenu();
             }
             case 3 -> {
-                createPaymentBillForHousingLoan();
+                if (SecurityContext.getPaymentReportsForHousingLoan() == null) {
+                    List<PaymentReport> paymentBillForHousingLoan = createPaymentBillForHousingLoan();
+                    SecurityContext.fillPaymentReportForHousingLoan(paymentBillForHousingLoan);
+                }
+                List<PaymentReport> paymentReports = SecurityContext.getPaymentReportsForHousingLoan();
                 System.out.println(paymentReportService.unpaidInstallmentsBasedOnTypeOfLoan(student, TypeOfLoan.HOUSING_LOAN));
                 System.out.println("Enter the id : ");
                 int i = scanner.nextInt();
@@ -194,7 +207,7 @@ public class PaymentMenu {
         System.out.println(paymentReportService.paidInstallments(student));
     }
 
-    private static void createPaymentBillForTuitionLoan() {
+    private static List<PaymentReport> createPaymentBillForTuitionLoan() {
         Student student = (Student) SecurityContext.getCurrentUser();
         Double totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForTuitionLoan();
         double initialMoney = totalAmountOfMoneyAfterInterest / 372;
@@ -213,10 +226,12 @@ public class PaymentMenu {
             paymentReport.setLoan(loan);
             paymentReportService.saveOrUpdate(paymentReport);
         }
+        SecurityContext.fillPaymentReportForTuitionLoan(paymentReports);
+        return paymentReports;
     }
 
 
-    private static void createPaymentBillForEducationalLoan() {
+    private static List<PaymentReport> createPaymentBillForEducationalLoan() {
         Student student = (Student) SecurityContext.getCurrentUser();
         Double totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForEducationalLoan();
         double initialMoney = totalAmountOfMoneyAfterInterest / 372;
@@ -235,9 +250,11 @@ public class PaymentMenu {
             paymentReport.setLoan(loan);
             paymentReportService.saveOrUpdate(paymentReport);
         }
+        SecurityContext.fillPaymentReportForEducationalLoan(paymentReports);
+        return paymentReports;
     }
 
-    private static void createPaymentBillForHousingLoan() {
+    public static List<PaymentReport> createPaymentBillForHousingLoan() {
         Student student = (Student) SecurityContext.getCurrentUser();
         Double totalAmountOfMoneyAfterInterest = totalAmountOfMoneyAfterInterestForHousingLoan();
         double initialMoney = totalAmountOfMoneyAfterInterest / 372;
@@ -256,6 +273,8 @@ public class PaymentMenu {
             paymentReport.setLoan(loan);
             paymentReportService.saveOrUpdate(paymentReport);
         }
+        SecurityContext.fillPaymentReportForHousingLoan(paymentReports);
+        return paymentReports;
     }
 
 

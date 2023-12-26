@@ -1,6 +1,7 @@
 package menu;
 
 
+import entity.Person;
 import entity.card.Card;
 import entity.loan.*;
 import entity.student.Grade;
@@ -274,8 +275,12 @@ public class LoanMenu {
         }
     }
 
+    private static Person getIdentityOFStudent() {
+        return SecurityContext.getCurrentUser();
+    }
 
     private static void housingLoan() throws ParseException {
+        //if (getIdentityOFStudent());
         Student student = (Student) SecurityContext.getCurrentUser();
         LocalDate todayDate = SecurityContext.getTodayDate();
         if (student == null) {

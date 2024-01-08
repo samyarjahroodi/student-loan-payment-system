@@ -1,0 +1,4 @@
+![1_t8Y_XEd-SvAQNPVjOcbHjQ](https://github.com/samyarjahroodi/student-loan-payment-system/assets/144313090/29718eef-fd93-4fd5-be8c-1ac99c1698d1)
+
+
+Introducing a comprehensive Educational Management System designed to streamline administrative tasks for teachers, students, courses, and staff. Administrators gain control with CRUD operations, enabling effortless registration, deletion, and editing of student, teacher, and employee details. Course management ensures compliance with rules, preventing duplicate course selection and exceeding unit limits. For students, the system provides a user-friendly interface to view profiles, choose units based on GPA, and access a detailed history of lessons taken. Teachers can record student scores, view their rights, and calculate salaries based on teaching units. Simplify education management with our robust system
